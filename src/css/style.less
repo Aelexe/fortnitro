@@ -1,0 +1,383 @@
+/* Fonts */
+@primary-font: "Open Sans", sans-serif;
+@secondary-font: "Oswald", sans-serif;
+
+/* Colors */
+@transparent-color: rgba(0, 0, 0, 0);
+@white-color: rgb(255, 255, 255);
+@common-bg-color: rgba(30, 46, 81, 0.7);
+@major-set-left-gradient-start-color: #6b91be;
+@major-set-left-gradient-end-color: #5f82ac;
+@major-set-right-gradient-start-color: #4d6a93;
+@major-set-right-gradient-end-color: #2b3e61;
+@minor-set-left-color: #40577f;
+@minor-set-right-color: #344971;
+@challenge-bg-color: @common-bg-color;
+@challenge-bg-hover-color: rgba(46, 72, 130, 0.7);
+@challenge-bg-locked-color: rgba(40, 40, 40, 0.7);
+@challenge-bg-complete-color: rgba(37, 80, 57, 0.7);
+@dialog-bg-color: rgba(52, 73, 93, 0.9);
+@progress-bar-bg-color: #273965;
+@progress-bar-fill-color: rgb(255, 255, 255, 0.9);
+@button-bg-color: rgba(30, 46, 81, 0.5);
+@button-green-color: rgb(71, 201, 118);
+@button-red-color: rgb(220, 50, 50);
+@button-grey-color: rgb(150, 150, 150);
+
+/* Screens */
+@small-screen: 576px;
+@medium-screen: 768px;
+@large-screen: 992px;
+@xlarge-screen: 1200px;
+
+.clear-fix() {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+* {
+	margin: 0;
+}
+
+body {
+	background-image: url("../img/menu-background.jpg");
+	background-size: 100% 100%;
+	height: 100%;
+	color: @white-color;
+	font-family: @primary-font;
+	user-select: none;
+	overflow-x: hidden;
+}
+
+header {
+	display: flex;
+	align-items: center;
+	padding: 4px 10px;
+	background-color: @common-bg-color;
+
+	h1 {
+		font-family: @secondary-font;
+		margin-left: 6px;
+		font-size: 22px;
+		text-transform: uppercase;
+	}
+
+	.discord-button {
+		color: #ffffff;
+		font-size: 30px;
+		margin-left: auto;
+		cursor: pointer;
+	}
+}
+
+#content {
+	position: relative;
+	height: calc(100% - 40px);
+}
+
+#challenges-container {
+	position: absolute;
+	top: 10px;
+	width: 460px;
+	max-height: calc(100% - 20px);
+	color: @white-color;
+	left: 10px;
+	overflow-y: scroll;
+}
+
+#canvas-container {
+	position: absolute;
+	top: 10px;
+	left: 500px;
+	box-sizing: border-box;
+	height: calc(100% - 20px);
+	border: 6px solid rgba(30, 46, 81, 0.7);
+}
+
+canvas {
+	image-rendering: -moz-crisp-edges;
+	image-rendering: -webkit-crisp-edges;
+	image-rendering: pixelated;
+	image-rendering: crisp-edges;
+}
+
+.challenge-set-major {
+	width: calc(100% - 11px);
+
+	h2 {
+		/* background-image: linear-gradient(195deg, @major-set-right-gradient-end-color 0%, @major-set-right-gradient-start-color 45%, @major-set-left-gradient-end-color 45%, @major-set-left-gradient-start-color 100%); */
+		background-image: linear-gradient(
+			75deg,
+			@major-set-left-gradient-start-color 0%,
+			@major-set-left-gradient-end-color 55%,
+			@major-set-right-gradient-start-color 55%,
+			@major-set-right-gradient-end-color 100%
+		);
+		padding: 10px 20px;
+		font-size: 20px;
+	}
+
+	& + & {
+		margin-top: 10px;
+	}
+}
+
+.challenge-set-minor {
+	margin-top: 4px;
+
+	.block {
+		background-image: linear-gradient(75deg, @minor-set-left-color 25%, @minor-set-right-color 25%);
+		padding: 10px 17px 10px 20px;
+		border: 3px solid rgba(30, 46, 81, 0.7);
+
+		&:after {
+			.clear-fix();
+		}
+	}
+
+	&.complete .block {
+		background: rgba(37, 80, 57, 0.7);
+		border: 3px solid rgba(10, 60, 30, 0.7);
+	}
+
+	h3 {
+		font-size: 18px;
+	}
+
+	.left-block {
+		float: left;
+		width: 85%;
+
+		.description {
+			display: inline-block;
+		}
+	}
+
+	.right-block {
+		float: right;
+		display: flex;
+		align-items: center;
+	}
+
+	.list-container {
+		overflow: hidden;
+		transition: height 500ms;
+	}
+
+	.list {
+		position: relative;
+		overflow: hidden;
+		top: 0;
+		transition: top 500ms;
+	}
+
+	&.collapsed .list {
+		z-index: -1;
+	}
+}
+
+.challenge {
+	background-color: @challenge-bg-color;
+	background-size: 200% 100%;
+	background-position: right bottom;
+	padding: 10px 20px;
+	transition: background-position 300ms ease-out, background-color 300ms;
+
+	&:hover {
+		background-color: @challenge-bg-hover-color;
+	}
+
+	&.locked {
+		background-color: @challenge-bg-locked-color;
+	}
+
+	&.complete {
+		background-color: @transparent-color;
+		background-image: linear-gradient(to right, @challenge-bg-complete-color 50%, @challenge-bg-color 50%);
+		background-position: left bottom;
+		transition: background-position 300ms, background-color 0;
+	}
+
+	&:after {
+		.clear-fix();
+	}
+
+	.left-block {
+		float: left;
+		width: 85%;
+
+		.description {
+			display: inline-block;
+		}
+
+		.progress-bar {
+			height: 8px;
+			margin-top: 4px;
+			background: @progress-bar-bg-color;
+			position: relative;
+
+			.progress-bar-fill {
+				height: 100%;
+				background-color: @progress-bar-fill-color;
+				transition: width 500ms ease-out;
+			}
+		}
+	}
+
+	.right-block {
+		float: right;
+		height: 34px;
+		display: flex;
+		align-items: center;
+	}
+}
+
+.button {
+	cursor: pointer;
+	background: @button-bg-color;
+	border-radius: 2px;
+	padding: 4px;
+
+	&.fa-arrow-right,
+	&.fa-check {
+		color: @button-green-color;
+	}
+
+	&.fa-ban,
+	&.fa-redo {
+		color: @button-red-color;
+	}
+
+	&.fa-lock {
+		background-color: @transparent-color;
+		color: @button-grey-color;
+		cursor: default;
+	}
+}
+
+.fa-arrow-right {
+	width: 16px;
+}
+
+.dialog {
+	position: absolute;
+	padding: 10px;
+	background: @dialog-bg-color;
+	border: 4px solid @common-bg-color;
+
+	.buttons {
+		margin-top: 8px;
+		font-size: 18px;
+		text-align: right;
+	}
+}
+
+.dialog i + i {
+	margin-left: 8px;
+}
+/* Simple Bar */
+[data-simplebar] {
+	position: relative;
+	z-index: 0;
+	overflow: hidden !important;
+	max-height: inherit;
+	-webkit-overflow-scrolling: touch;
+	/* Trigger native scrolling for mobile, if not supported, plugin is used. */
+}
+
+[data-simplebar="init"] {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+}
+
+.simplebar-scroll-content {
+	overflow-x: hidden !important;
+	overflow-y: scroll;
+	min-width: 100% !important;
+	max-height: inherit !important;
+	-webkit-box-sizing: content-box !important;
+	box-sizing: content-box !important;
+}
+
+.simplebar-content {
+	overflow-y: hidden !important;
+	overflow-x: scroll;
+	-webkit-box-sizing: border-box !important;
+	box-sizing: border-box !important;
+	min-height: 100% !important;
+}
+
+.simplebar-track {
+	z-index: 1;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	width: 11px;
+}
+
+.simplebar-scrollbar {
+	position: absolute;
+	right: 2px;
+	width: 7px;
+	min-height: 10px;
+}
+
+.simplebar-scrollbar:before {
+	position: absolute;
+	content: "";
+	background: rgb(30, 46, 81);
+	left: 0;
+	right: 0;
+	opacity: 0;
+	-webkit-transition: opacity 0.2s linear;
+	transition: opacity 0.2s linear;
+}
+
+.simplebar-track .simplebar-scrollbar.visible:before,
+.simplebar-track:hover .simplebar-scrollbar:before {
+	/* When hovered, remove all transitions from drag handle */
+	opacity: 0.7;
+	-webkit-transition: opacity 0 linear;
+	transition: opacity 0 linear;
+}
+
+.simplebar-track.vertical {
+	top: 0;
+}
+
+.simplebar-track.vertical .simplebar-scrollbar:before {
+	top: 0;
+	bottom: 0;
+}
+
+.simplebar-track.horizontal {
+	left: 0;
+	width: auto;
+	height: 11px;
+}
+
+.simplebar-track.horizontal .simplebar-scrollbar:before {
+	height: 100%;
+	left: 2px;
+	right: 2px;
+}
+
+.horizontal.simplebar-track .simplebar-scrollbar {
+	right: auto;
+	top: 2px;
+	height: 7px;
+	min-height: 0;
+	min-width: 10px;
+	width: auto;
+}
+/* Custom Overrides */
+.simplebar-scroll-content {
+	margin-bottom: 0 !important;
+}
+
+.simplebar-content {
+	padding-bottom: 0 !important;
+	overflow-x: hidden;
+}
