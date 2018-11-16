@@ -69,11 +69,13 @@ const createPage = () => {
 	canvas.addEventListener("wheel", (event) => {
 		event.preventDefault();
 
-		const zoomChange = Math.max(Math.min(-event.deltaY, 1), -1);
+		const zoomChange = -event.deltaY;
 
-		map.adjustZoom(zoomChange, event.offsetX, event.offsetY);
-
-		map.triggerUpdate();
+		if (zoomChange > 0) {
+			map.zoomIn(event.offsetX, event.offsetY);
+		} else if (zoomChange < 0) {
+			map.zoomOut(event.offsetX, event.offsetY);
+		}
 	});
 };
 

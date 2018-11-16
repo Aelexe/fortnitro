@@ -3,6 +3,7 @@ import { prompt } from "tracker/prompt";
 import { Pin } from "./pin";
 
 const MAP_IMAGE_SIZE: number = 2200;
+const ISOLATION_ZOOM: number = 1.4;
 
 class Map {
 	private static readonly UPDATE_TIMER = 1000 / 60;
@@ -130,13 +131,21 @@ class Map {
 		this.targetZoom = zoom;
 	}
 
-	public adjustZoom(zoom, centerX, centerY) {
+	public zoomIn(centerX, centerY): void {
+		this.adjustZoom(this.targetZoom * 0.1, centerX, centerY);
+	}
+
+	public zoomOut(centerX, centerY): void {
+		this.adjustZoom(this.targetZoom * -0.1, centerX, centerY);
+	}
+
+	public adjustZoom(zoomAdjust, centerX, centerY) {
 		// Get the percentage offset of the cursor from the origin of the map.
 		const xPercent = (-this._x + centerX) / (MAP_IMAGE_SIZE * this._zoom);
 		const yPercent = (-this._y + centerY) / (MAP_IMAGE_SIZE * this._zoom);
 
 		// Set target zoom.
-		this.targetZoom = this.targetZoom + this.targetZoom * zoom * 0.1;
+		this.targetZoom += zoomAdjust;
 		if (this.targetZoom < this._zoomMin) {
 			this.targetZoom = this._zoomMin;
 		}
@@ -203,7 +212,9 @@ class Map {
 			}
 		});
 
-		if (clickedPins.length === 1) {
+		if (clickedPins.length === 0) {
+			return;
+		} else if (clickedPins.length === 1) {
 			const clickedPin = clickedPins[clickedPins.length - 1];
 			const bounds = clickedPin.getCanvasBounds(this.x, this.y, this.zoom);
 
@@ -214,6 +225,8 @@ class Map {
 			prompt.setConfirmCallback(() => {
 				clickedPin.complete();
 			});
+		} else {
+			this.adjustZoom(ISOLATION_ZOOM - this.zoom, x, y);
 		}
 	}
 
