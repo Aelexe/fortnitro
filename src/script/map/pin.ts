@@ -2,33 +2,6 @@ import { map } from "./map";
 
 import { saveData } from "data/save-data";
 
-const starImage = new Image();
-starImage.src = "img/starpin.png";
-
-const streetlightImage = new Image();
-streetlightImage.src = "img/speakerpin.png";
-
-const gliderImage = new Image();
-gliderImage.src = "img/umbrellapin.png";
-
-const corruptionImage = new Image();
-corruptionImage.src = "img/corruption.png";
-
-const targetImage = new Image();
-targetImage.src = "img/targetpin.png";
-
-const killImage = new Image();
-killImage.src = "img/skullpin.png";
-
-const chestImage = new Image();
-chestImage.src = "img/chestpin.png";
-
-const timeTrialImage = new Image();
-timeTrialImage.src = "img/timerpin.png";
-
-const ammoImage = new Image();
-ammoImage.src = "img/teststar.png";
-
 const pinMap = {
 	streetLight: "speakerpin",
 	star: "starpin",
@@ -80,15 +53,11 @@ export class Pin {
 		this.targetX = x;
 		this.targetY = y;
 
-		if (imageType === undefined) {
+		if (imageType === undefined || pinMap[imageType] === undefined) {
 			imageType = "question";
 		}
 
 		if (imageMap[imageType] === undefined) {
-			if (pinMap[imageType] === undefined) {
-				imageType = "question";
-			}
-
 			const pinImage = new Image();
 			pinImage.src = "img/" + pinMap[imageType] + ".png";
 			imageMap[imageType] = pinImage;
@@ -96,12 +65,12 @@ export class Pin {
 
 		const image = imageMap[imageType];
 
-		if (image.complete) {
+		if (image.complete || image.naturalWidth > 0) {
 			this.setImage(image);
 		} else {
-			image.onload = () => {
+			image.addEventListener("load", () => {
 				this.setImage(image);
-			};
+			});
 		}
 	}
 
