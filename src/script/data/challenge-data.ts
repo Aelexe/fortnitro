@@ -239,6 +239,38 @@ const challengeData = {
 								"Stage 3: Visit Greasy Grove and Leaky Lake in the same match",
 								"Stage 4: Visit Lucky Landing and Tilted Towers in the same match",
 								"Final Stage: Visit Snobby Shores and Salty Springs in the same match"
+							],
+							pins: [
+								{
+									id: "s6_w3_c4_p1",
+									location: "riskyReels",
+									image: "flag",
+									links: [{ location: "wailingWoods", image: "flag" }]
+								},
+								{
+									id: "s6_w3_c4_p2",
+									location: "paradisePalms",
+									image: "flag",
+									links: [{ location: "dustyDivot", image: "flag" }]
+								},
+								{
+									id: "s6_w3_c4_p3",
+									location: "greasyGrove",
+									image: "flag",
+									links: [{ location: "leakyLake", image: "flag" }]
+								},
+								{
+									id: "s6_w3_c4_p4",
+									location: "luckyLanding",
+									image: "flag",
+									links: [{ location: "tiltedTowers", image: "flag" }]
+								},
+								{
+									id: "s6_w3_c4_p5",
+									location: "snobbyShores",
+									image: "flag",
+									links: [{ location: "saltySprings", image: "flag" }]
+								}
 							]
 						},
 						{
@@ -346,6 +378,46 @@ const challengeData = {
 	]
 };
 
+const annotatePin = (pin) => {
+	if (pin.location === undefined) {
+		return;
+	}
+
+	const pinLocation = namedLocations[pin.location];
+
+	if (pinLocation.index === undefined) {
+		pinLocation.index = 0;
+		pin.x = pinLocation.x;
+		pin.y = pinLocation.y;
+	} else {
+		const magnitude = pinLocation.index / 4 + 1;
+		const offset = 30;
+		const direction = pinLocation.index % 4;
+
+		if (direction === 0) {
+			pin.x = pinLocation.x + offset * magnitude;
+		} else if (direction === 2) {
+			pin.x = pinLocation.x - offset * magnitude;
+		} else {
+			pin.x = pinLocation.x;
+		}
+
+		if (direction === 1) {
+			pin.y = pinLocation.y + offset * magnitude;
+		} else if (direction === 3) {
+			pin.y = pinLocation.y - offset * magnitude;
+		} else {
+			pin.y = pinLocation.y;
+		}
+
+		pinLocation.index++;
+	}
+
+	if (pin.links !== undefined) {
+		pin.links.forEach(annotatePin);
+	}
+};
+
 challengeData.challengeSets.forEach((challengeSet: any) => {
 	challengeSet.subChallengeSets.forEach((subChallengeSet: any) => {
 		subChallengeSet.challenges.forEach((challenge: any) => {
@@ -360,41 +432,7 @@ challengeData.challengeSets.forEach((challengeSet: any) => {
 			if (pins === undefined) {
 				return;
 			}
-			pins.forEach((pin) => {
-				if (pin.location === undefined) {
-					return;
-				}
-
-				const pinLocation = namedLocations[pin.location];
-
-				if (pinLocation.index === undefined) {
-					pinLocation.index = 0;
-					pin.x = pinLocation.x;
-					pin.y = pinLocation.y;
-				} else {
-					const magnitude = pinLocation.index / 4 + 1;
-					const offset = 30;
-					const direction = pinLocation.index % 4;
-
-					if (direction === 0) {
-						pin.x = pinLocation.x + offset * magnitude;
-					} else if (direction === 2) {
-						pin.x = pinLocation.x - offset * magnitude;
-					} else {
-						pin.x = pinLocation.x;
-					}
-
-					if (direction === 1) {
-						pin.y = pinLocation.y + offset * magnitude;
-					} else if (direction === 3) {
-						pin.y = pinLocation.y - offset * magnitude;
-					} else {
-						pin.y = pinLocation.y;
-					}
-
-					pinLocation.index++;
-				}
-			});
+			pins.forEach(annotatePin);
 		});
 	});
 });
