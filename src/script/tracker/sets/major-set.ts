@@ -1,7 +1,6 @@
-import { MinorChallenge } from "./minor-challenge";
+import { MinorSet } from "./minor-set";
 
-export class MajorChallenge {
-
+export class MajorSet {
 	/* Elements */
 	private _element;
 	private _descriptionElement;
@@ -28,8 +27,7 @@ export class MajorChallenge {
 		this._descriptionElement.textContent = description;
 	}
 
-	public append(minorChallenge: MinorChallenge) {
-		this._element.appendChild(minorChallenge.element);
+	public append(minorSet: MinorSet) {
+		this._element.appendChild(minorSet.element);
 	}
-
 }
