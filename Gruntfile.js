@@ -11,7 +11,9 @@ const isEmptyDirectory = (path) => {
 		return true;
 	}
 
-	const concatPaths = childPaths.map((name) => { return path + "\\" + name });
+	const concatPaths = childPaths.map((name) => {
+		return path + "\\" + name;
+	});
 
 	for (concatPath of concatPaths) {
 		if (!isEmptyDirectory(concatPath)) {
@@ -20,16 +22,17 @@ const isEmptyDirectory = (path) => {
 	}
 
 	return true;
-}
+};
 
 module.exports = function(grunt) {
 	const DEPLOY_PATH = "D:/Programming/Software/xampp/htdocs";
+	const webpackConfig = require("./webpack.config");
 
 	grunt.loadNpmTasks("grunt-contrib-clean");
 	grunt.loadNpmTasks("grunt-contrib-copy");
 	grunt.loadNpmTasks("grunt-tslint");
 	grunt.loadNpmTasks("grunt-ts");
-	grunt.loadNpmTasks("grunt-contrib-requirejs");
+	grunt.loadNpmTasks("grunt-webpack");
 	grunt.loadNpmTasks("grunt-contrib-less");
 	grunt.loadNpmTasks("grunt-postcss");
 	grunt.loadNpmTasks("grunt-contrib-watch");
@@ -43,7 +46,7 @@ module.exports = function(grunt) {
 		clean: {
 			distCode: ["dist/**/*.js", "dist/**/*.json", "dist/**/*.ts"],
 			distTs: ["dist/**/*.ts"],
-			distCodeMaxes: ["dist/**/*.js", "!dist/**/app.js", "!dist/**/require.js"],
+			distCodeNonMins: ["dist/**/*.js", "!dist/**/bundle.js"],
 			distEmpties: {
 				src: "dist/**/*",
 				filter: function(path) {
@@ -88,84 +91,104 @@ module.exports = function(grunt) {
 		},
 		copy: {
 			distCode: {
-				files: [{
-					expand: true,
-					cwd: "src",
-					src: ["**/*.js", "**/*.json", "**/*.ts"],
-					dest: "dist",
-				}]
+				files: [
+					{
+						expand: true,
+						cwd: "src",
+						src: ["**/*.js", "**/*.json", "**/*.ts"],
+						dest: "dist"
+					}
+				]
 			},
 			deployCode: {
-				files: [{
-					expand: true,
-					cwd: "dist",
-					src: "**/*.js",
-					dest: DEPLOY_PATH,
-				}]
+				files: [
+					{
+						expand: true,
+						cwd: "dist",
+						src: "**/*.js",
+						dest: DEPLOY_PATH
+					}
+				]
 			},
 			distHtml: {
-				files: [{
-					expand: true,
-					cwd: "src",
-					src: "**/*.html",
-					dest: "dist",
-				}]
+				files: [
+					{
+						expand: true,
+						cwd: "src",
+						src: "**/*.html",
+						dest: "dist"
+					}
+				]
 			},
 			deployHtml: {
-				files: [{
-					expand: true,
-					cwd: "dist",
-					src: "**/*.html",
-					dest: DEPLOY_PATH,
-				}]
+				files: [
+					{
+						expand: true,
+						cwd: "dist",
+						src: "**/*.html",
+						dest: DEPLOY_PATH
+					}
+				]
 			},
 			distStyles: {
-				files: [{
-					expand: true,
-					cwd: "src",
-					src: "**/*.less",
-					dest: "dist",
-				}]
+				files: [
+					{
+						expand: true,
+						cwd: "src",
+						src: "**/*.less",
+						dest: "dist"
+					}
+				]
 			},
 			deployStyles: {
-				files: [{
-					expand: true,
-					cwd: "dist",
-					src: "**/*.css",
-					dest: DEPLOY_PATH,
-				}]
+				files: [
+					{
+						expand: true,
+						cwd: "dist",
+						src: "**/*.css",
+						dest: DEPLOY_PATH
+					}
+				]
 			},
 			distImages: {
-				files: [{
-					expand: true,
-					cwd: "src",
-					src: ["**/*.png", "**/*.jpg", "**/*.ico"],
-					dest: "dist",
-				}]
+				files: [
+					{
+						expand: true,
+						cwd: "src",
+						src: ["**/*.png", "**/*.jpg", "**/*.ico"],
+						dest: "dist"
+					}
+				]
 			},
 			deployImages: {
-				files: [{
-					expand: true,
-					cwd: "dist",
-					src: ["**/*.png", "**/*.jpg", "**/*.ico"],
-					dest: DEPLOY_PATH,
-				}]
+				files: [
+					{
+						expand: true,
+						cwd: "dist",
+						src: ["**/*.png", "**/*.jpg", "**/*.ico"],
+						dest: DEPLOY_PATH
+					}
+				]
 			},
 			distAll: {
-				files: [{
-					expand: true,
-					cwd: "src",
-					src: "**",
-					dest: "dist",
-				}]
+				files: [
+					{
+						expand: true,
+						cwd: "src",
+						src: "**",
+						dest: "dist"
+					}
+				]
 			},
 			deployAll: {
-				files: [{
-					expand: true,
-					cwd: "dist",
-					src: "**",
-					dest: DEPLOY_PATH,
-				}]
+				files: [
+					{
+						expand: true,
+						cwd: "dist",
+						src: "**",
+						dest: DEPLOY_PATH
+					}
+				]
 			}
 		},
 		tslint: {
@@ -177,15 +200,6 @@ module.exports = function(grunt) {
 		ts: {
 			default: {
 				tsconfig: "./tsconfig.json"
-			},
-			old: {
-				src: ["dist/**/*.ts"],
-				options: {
-					module: "AMD",
-					sourceMap: false,
-					allowSyntheticDefaultImports: true,
-					fast: "never"
-				}
 			}
 		},
 		requirejs: {
@@ -198,6 +212,12 @@ module.exports = function(grunt) {
 				}
 			}
 		},
+		webpack: {
+			options: {
+				stats: !process.env.NODE_ENV || process.env.NODE_ENV === "development"
+			},
+			default: webpackConfig
+		},
 		less: {
 			default: {
 				files: {
@@ -207,10 +227,7 @@ module.exports = function(grunt) {
 		},
 		postcss: {
 			options: {
-				processors: [
-					require('autoprefixer')({ browsers: 'last 2 versions' }),
-					require('cssnano')()
-				]
+				processors: [require("autoprefixer")({ browsers: "last 2 versions" }), require("cssnano")()]
 			},
 			dist: {
 				src: "dist/**/*.css"
@@ -223,7 +240,7 @@ module.exports = function(grunt) {
 			},
 			code: {
 				files: ["src/**/*.js", "src/**/*.json", "src/**/*.ts"],
-				tasks: ["validateCode", "buildCode", "minifyCode", "deployCode"]
+				tasks: ["validateCode", "buildCode", "deployCode"]
 			},
 			html: {
 				files: "src/**/*.html",
@@ -242,8 +259,14 @@ module.exports = function(grunt) {
 
 	// Code
 	grunt.registerTask("validateCode", ["tslint:code"]);
-	grunt.registerTask("buildCode", ["clean:distCode", "copy:distCode", "ts", "clean:distTs"]);
-	grunt.registerTask("minifyCode", ["requirejs", "clean:distCodeMaxes", "clean:distEmpties"]);
+	grunt.registerTask("buildCode", [
+		"clean:distCode",
+		"copy:distCode",
+		"webpack",
+		"clean:distTs",
+		"clean:distCodeNonMins",
+		"clean:distEmpties"
+	]);
 	grunt.registerTask("deployCode", ["clean:deployCode", "copy:deployCode"]);
 
 	// HTML
@@ -257,5 +280,4 @@ module.exports = function(grunt) {
 	// Images
 	grunt.registerTask("buildImages", ["clean:distImages", "copy:distImages"]);
 	grunt.registerTask("deployImages", ["clean:deployImages", "copy:deployImages"]);
-
 };

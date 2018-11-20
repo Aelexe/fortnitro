@@ -1,9 +1,9 @@
-import { map } from "map/map";
-import { Pin } from "map/pin";
+import { map } from "../../map/map";
+import { Pin } from "../../map/pin";
 
-import { Button } from "tracker/button";
+import { Button } from "../button";
 
-import { saveData } from "data/save-data";
+import { saveData } from "../../data/save-data";
 
 export class Challenge {
 	/* Display */

@@ -1,7 +1,7 @@
 import { map } from "./map/map";
 import { Pin } from "./map/pin";
 import { prompt } from "./tracker/prompt";
-import { Tracker } from "tracker";
+import { Tracker } from "./tracker";
 import challengeData from "./data/challenge-data";
 
 const createPage = () => {

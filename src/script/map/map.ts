@@ -1,4 +1,4 @@
-import { prompt } from "tracker/prompt";
+import { prompt } from "../tracker/prompt";
 
 import { Pin } from "./pin";
 
@@ -293,6 +293,7 @@ class Map {
 		this._pins.forEach((pin) => {
 			pin.draw(this._context, this._x, this._y, this._zoom);
 		});
+
 	}
 }
 

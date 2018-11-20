@@ -1,10 +1,9 @@
 import { Challenge } from "./challenge";
 
 import { Button } from "../button";
-import { Pin } from "map/pin";
+import { Pin } from "../../map/pin";
 
 export class HiddenChallenge extends Challenge {
-
 	private lockButton: Button;
 
 	private isLocked: boolean = true;
@@ -47,5 +46,4 @@ export class HiddenChallenge extends Challenge {
 			pin.hide();
 		}
 	}
-
 }

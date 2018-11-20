@@ -1,4 +1,4 @@
-import * as Cookies from "lib/js.cookie";
+import * as Cookies from "../lib/js.cookie";
 
 class SaveData {
 	private static readonly COOKIE_NAME = "savedData";

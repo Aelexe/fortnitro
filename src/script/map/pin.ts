@@ -1,6 +1,6 @@
 import { map } from "./map";
 
-import { saveData } from "data/save-data";
+import { saveData } from "../data/save-data";
 
 const pinMap = {
 	streetLight: "speakerpin",

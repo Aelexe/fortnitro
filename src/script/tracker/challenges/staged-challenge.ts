@@ -2,12 +2,11 @@ import { ProgressChallenge } from "./progress-challenge";
 
 import { Button } from "../button";
 
-import { map } from "map/map";
-import { Pin } from "map/pin";
+import { map } from "../../map/map";
+import { Pin } from "../../map/pin";
 
 // TODO Check this class for things that can be removed after draw scheduling.
 export class StagedChallenge extends ProgressChallenge {
-
 	private nextButton: Button;
 
 	private descriptions: string[];
@@ -87,5 +86,4 @@ export class StagedChallenge extends ProgressChallenge {
 
 		this.updateDisplay();
 	}
-
 }
