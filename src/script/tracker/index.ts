@@ -1,21 +1,19 @@
-import { MajorChallenge } from "./tracker/major-challenge";
-import { MinorChallenge } from "./tracker/minor-challenge";
-import { Challenge, ProgressChallenge, StagedChallenge, HiddenChallenge } from "./tracker/challenges";
+import { Challenge, ProgressChallenge, StagedChallenge, HiddenChallenge } from "./challenges";
+import { MinorSet, MajorSet } from "./sets";
 
-import { map } from "./map/map";
-import { Pin } from "./map/pin";
+import { map, Pin } from "../map";
 
-import { saveData } from "./data/save-data";
+import { saveData } from "../data/save-data";
 
-import * as SimpleBar from "./lib/simplebar";
+import * as SimpleBar from "../lib/simplebar";
 
 export class Tracker {
 	/* Display */
 	private rootElement: HTMLElement;
 
 	/* Properties */
-	private majorChallenges: MajorChallenge[] = [];
-	private minorChallenges: MinorChallenge[] = [];
+	private majorSets: MajorSet[] = [];
+	private minorSets: MinorSet[] = [];
 	private challenges: Challenge[] = [];
 
 	constructor(challengeData: any, rootElement: HTMLElement) {
@@ -29,14 +27,14 @@ export class Tracker {
 
 	private load(challengeData: any): void {
 		challengeData.challengeSets.forEach((mcData) => {
-			const majorChallenge: MajorChallenge = new MajorChallenge(mcData.name);
-			this.majorChallenges.push(majorChallenge);
+			const majorChallenge: MajorSet = new MajorSet(mcData.name);
+			this.majorSets.push(majorChallenge);
 			this.rootElement.appendChild(majorChallenge.element);
 
 			mcData.subChallengeSets.forEach((scData: any) => {
-				const minorChallenge: MinorChallenge = new MinorChallenge(scData.name);
-				this.minorChallenges.push(minorChallenge);
-				majorChallenge.append(minorChallenge);
+				const minorSet: MinorSet = new MinorSet(scData.name);
+				this.minorSets.push(minorSet);
+				majorChallenge.append(minorSet);
 
 				scData.challenges.forEach((cData) => {
 					let challenge: Challenge;
@@ -50,7 +48,7 @@ export class Tracker {
 						challenge = new HiddenChallenge(cData.id, cData.description);
 					}
 					this.challenges.push(challenge);
-					minorChallenge.append(challenge);
+					minorSet.append(challenge);
 
 					let pins: any[];
 					if (cData.pin !== undefined) {

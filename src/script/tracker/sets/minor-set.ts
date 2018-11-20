@@ -1,8 +1,8 @@
-import { Challenge, HiddenChallenge } from "./challenges";
+import { Challenge, HiddenChallenge } from "../challenges";
 
-import { Button } from "./button";
+import { Button } from "../button";
 
-export class MinorChallenge {
+export class MinorSet {
 	/* Display */
 	private _element;
 	private _block;
