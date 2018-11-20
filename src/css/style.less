@@ -36,6 +36,10 @@
 	clear: both;
 }
 
+.text-shadow(@size: 1px) {
+	text-shadow: -@size 0 black, 0 @size black, @size 0 black, 0 -@size black;
+}
+
 * {
 	margin: 0;
 }
@@ -61,6 +65,8 @@ header {
 		margin-left: 6px;
 		font-size: 22px;
 		text-transform: uppercase;
+		.text-shadow(3px);
+		letter-spacing: 1px;
 	}
 
 	.discord-button {
@@ -116,6 +122,7 @@ canvas {
 		);
 		padding: 10px 20px;
 		font-size: 20px;
+		.text-shadow(2px);
 	}
 
 	& + & {
@@ -143,6 +150,7 @@ canvas {
 
 	h3 {
 		font-size: 18px;
+		.text-shadow(2px);
 	}
 
 	.left-block {
@@ -151,6 +159,7 @@ canvas {
 
 		.description {
 			display: inline-block;
+			.text-shadow(2px);
 		}
 	}
 
