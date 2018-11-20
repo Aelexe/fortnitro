@@ -1,6 +1,7 @@
 import { prompt } from "../tracker/prompt";
 
 import { Pin } from "./pin";
+import { Dialog } from "./dialog";
 
 const MAP_IMAGE_SIZE: number = 2200;
 const ISOLATION_ZOOM: number = 1.4;
@@ -26,11 +27,14 @@ class Map {
 	private isUpdating: boolean = false;
 
 	private _pins: Pin[] = [];
+	private dialog: Dialog;
+	private dialog2: Dialog;
+	private dialog3: Dialog;
 
 	public initialise(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void {
 		this._element = canvas;
 		this._context = context;
-
+		this.dialog = new Dialog(100, 100, 176, 64);
 		context.imageSmoothingEnabled = false;
 	}
 
@@ -294,6 +298,7 @@ class Map {
 			pin.draw(this._context, this._x, this._y, this._zoom);
 		});
 
+		this.dialog.draw(this._context);
 	}
 }
 
