@@ -98,6 +98,8 @@ export class Tracker {
 			challenge.getPins().forEach((pin) => {
 				if (saveData.getPinCompletion(pin.getId())) {
 					pin.complete();
+				} else {
+					pin.reset();
 				}
 			});
 			if (saveData.getChallengeCompletion(challenge.getId())) {

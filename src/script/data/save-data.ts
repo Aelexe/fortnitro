@@ -1,16 +1,18 @@
 import * as Cookies from "../lib/js.cookie";
 
-class SaveData {
-	private static readonly COOKIE_NAME = "savedData";
+const DEFAULT_COOKIE_NAME = "default";
 
+class SaveData {
+	private profileName: string;
 	private data;
 
-	constructor() {
-		this.loadCookie();
+	constructor(profileName?: string) {
+		this.loadCookie(profileName || DEFAULT_COOKIE_NAME);
 	}
 
-	private loadCookie() {
-		const cookie: string = Cookies.get(SaveData.COOKIE_NAME);
+	private loadCookie(profileName: string) {
+		this.profileName = profileName;
+		const cookie: string = Cookies.get(this.profileName);
 
 		if (cookie !== undefined) {
 			this.data = JSON.parse(cookie);
@@ -21,7 +23,7 @@ class SaveData {
 	}
 
 	private saveCookie() {
-		Cookies.set(SaveData.COOKIE_NAME, JSON.stringify(this.data));
+		Cookies.set(this.profileName, JSON.stringify(this.data));
 	}
 
 	public resetCookie() {
