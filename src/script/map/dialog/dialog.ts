@@ -1,3 +1,6 @@
+import { map } from "../map";
+
+import { Button } from "./button";
 const TILE_SIZE: number = 32;
 
 export class Dialog {
@@ -16,10 +19,14 @@ export class Dialog {
 	private bottom: HTMLImageElement = new Image();
 	private bottomRight: HTMLImageElement = new Image();
 
-	private tick: HTMLImageElement = new Image();
-	private cross: HTMLImageElement = new Image();
+	private isHidden: boolean;
 
 	private text: string = "Complete challenge marker?";
+
+	private tickButton: Button;
+	private crossButton: Button;
+
+	private callback;
 
 	constructor(x, y, width, height) {
 		this.x = x;
@@ -37,8 +44,21 @@ export class Dialog {
 		this.bottom.src = "img/bottom.png";
 		this.bottomRight.src = "img/bottomright.png";
 
-		this.tick.src = "img/tick.png";
-		this.cross.src = "img/cross.png";
+		this.tickButton = new Button(this.width - 20 * 2 - 12, this.height - 20 - 8, 20, 20, "tick");
+		this.crossButton = new Button(this.width - 20 - 8, this.height - 20 - 8, 20, 20, "cross");
+	}
+
+	public setX(x: number) {
+		this.x = x;
+	}
+
+	public setY(y: number) {
+		this.y = y;
+	}
+
+	public setPosition(x: number, y: number) {
+		this.setX(x);
+		this.setY(y);
 	}
 
 	public setWidth(width: number) {
@@ -57,7 +77,56 @@ export class Dialog {
 		}
 	}
 
+	public hide(): void {
+		this.isHidden = true;
+		map.triggerUpdate();
+	}
+
+	public show(): void {
+		this.isHidden = false;
+		map.triggerUpdate();
+	}
+
+	public setConfirmCallback(callback) {
+		this.callback = callback;
+	}
+
+	public removeConfirmCallback() {
+		this.callback = undefined;
+	}
+
+	public hover(x: number, y: number): boolean {
+		if (this.isHidden) {
+			return false;
+		}
+
+		if (x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height) {
+			return this.tickButton.hover(x - this.x, y - this.y) || this.crossButton.hover(x - this.x, y - this.y);
+		} else {
+			return false;
+		}
+	}
+
+	public click(x: number, y: number): boolean {
+		if (this.tickButton.click(x - this.x, y - this.y)) {
+			if (this.callback !== undefined) {
+				this.callback();
+			}
+			this.hide();
+			this.removeConfirmCallback();
+		} else if (this.crossButton.click(x - this.x, y - this.y)) {
+			this.hide();
+			this.removeConfirmCallback();
+		}
+
+		return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height;
+	}
+
 	public draw(context: CanvasRenderingContext2D) {
+		if (this.isHidden) {
+			return;
+		}
+
 		// Corners
 		context.drawImage(this.topLeft, this.x, this.y, TILE_SIZE, TILE_SIZE);
 		context.drawImage(this.topRight, this.x + this.width - TILE_SIZE, this.y, TILE_SIZE, TILE_SIZE);
@@ -110,7 +179,10 @@ export class Dialog {
 		context.fillStyle = "white";
 		context.fillText(this.text, this.x + textXOffset, this.y + textYOffset);
 
-		context.drawImage(
+		this.tickButton.draw(context, this.x, this.y);
+		this.crossButton.draw(context, this.x, this.y);
+
+		/*context.drawImage(
 			this.tick,
 			this.x + this.width - this.tick.width * 4 - 12,
 			this.y + this.height - this.tick.height * 2 - 8,
@@ -124,6 +196,6 @@ export class Dialog {
 			this.y + this.height - this.tick.height * 2 - 8,
 			this.tick.width * 2,
 			this.tick.height * 2
-		);
+		);*/
 	}
 }

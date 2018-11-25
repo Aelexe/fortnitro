@@ -28,13 +28,12 @@ class Map {
 
 	private _pins: Pin[] = [];
 	private dialog: Dialog;
-	private dialog2: Dialog;
-	private dialog3: Dialog;
 
 	public initialise(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void {
 		this._element = canvas;
 		this._context = context;
 		this.dialog = new Dialog(100, 100, 176, 64);
+		this.dialog.hide();
 		context.imageSmoothingEnabled = false;
 	}
 
@@ -181,17 +180,21 @@ class Map {
 			pin.unhover();
 		});
 
-		for (const pin of this._pins) {
-			if (pin.visible === false) {
-				continue;
-			}
+		hover = this.dialog.hover(x, y);
 
-			const bounds = pin.getCanvasBounds(this.x, this.y, this.zoom);
+		if (!hover) {
+			for (const pin of this._pins) {
+				if (pin.visible === false) {
+					continue;
+				}
 
-			if (x >= bounds.x && x <= bounds.x + bounds.width && (y >= bounds.y && y <= bounds.y + bounds.height)) {
-				hover = true;
-				pin.hover();
-				// break;
+				const bounds = pin.getCanvasBounds(this.x, this.y, this.zoom);
+
+				if (x >= bounds.x && x <= bounds.x + bounds.width && (y >= bounds.y && y <= bounds.y + bounds.height)) {
+					hover = true;
+					pin.hover();
+					// break;
+				}
 			}
 		}
 
@@ -203,6 +206,14 @@ class Map {
 	}
 
 	public click(x: number, y: number) {
+		let clicked = false;
+
+		clicked = this.dialog.click(x, y);
+
+		if (clicked) {
+			return;
+		}
+
 		const clickedPins = [];
 		this._pins.forEach((pin) => {
 			if (pin.visible === false) {
@@ -224,11 +235,16 @@ class Map {
 
 			const dialogX = bounds.x - prompt.element.offsetWidth / 2 + bounds.width / 2;
 			const dialogY = bounds.y - prompt.element.offsetHeight;
-			prompt.setPosition(dialogX, dialogY);
+			this.dialog.setPosition(dialogX, dialogY);
+			this.dialog.show();
+			this.dialog.setConfirmCallback(() => {
+				clickedPin.complete();
+			});
+			/*prompt.setPosition(dialogX, dialogY);
 			prompt.show();
 			prompt.setConfirmCallback(() => {
 				clickedPin.complete();
-			});
+			});*/
 		} else {
 			this.adjustZoom(ISOLATION_ZOOM - this.zoom, x, y);
 		}
