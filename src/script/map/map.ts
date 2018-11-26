@@ -2,6 +2,7 @@ import { prompt } from "../tracker/prompt";
 
 import { Pin } from "./pin";
 import { Dialog } from "./dialog";
+import { Tooltip } from "./dialog/tooltip";
 
 const MAP_IMAGE_SIZE: number = 2200;
 const ISOLATION_ZOOM: number = 1.4;
@@ -28,12 +29,15 @@ class Map {
 
 	private _pins: Pin[] = [];
 	private dialog: Dialog;
+	private tooltip: Tooltip;
 
 	public initialise(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void {
 		this._element = canvas;
 		this._context = context;
 		this.dialog = new Dialog(100, 100, 176, 64);
 		this.dialog.hide();
+		this.tooltip = new Tooltip(0, 0, 176, 32);
+		this.tooltip.hide();
 		context.imageSmoothingEnabled = false;
 	}
 
@@ -174,6 +178,7 @@ class Map {
 	}
 
 	public hover(x: number, y: number) {
+		this.tooltip.setPosition(x, y);
 		let hover = false;
 
 		this._pins.forEach((pin) => {
@@ -183,6 +188,7 @@ class Map {
 		hover = this.dialog.hover(x, y);
 
 		if (!hover) {
+			let hoverCount = 0;
 			for (const pin of this._pins) {
 				if (pin.visible === false) {
 					continue;
@@ -192,9 +198,15 @@ class Map {
 
 				if (x >= bounds.x && x <= bounds.x + bounds.width && (y >= bounds.y && y <= bounds.y + bounds.height)) {
 					hover = true;
+					hoverCount++;
 					pin.hover();
-					// break;
 				}
+			}
+
+			if (hoverCount === 1) {
+				this.tooltip.show();
+			} else {
+				this.tooltip.hide();
 			}
 		}
 
@@ -240,11 +252,6 @@ class Map {
 			this.dialog.setConfirmCallback(() => {
 				clickedPin.complete();
 			});
-			/*prompt.setPosition(dialogX, dialogY);
-			prompt.show();
-			prompt.setConfirmCallback(() => {
-				clickedPin.complete();
-			});*/
 		} else {
 			this.adjustZoom(ISOLATION_ZOOM - this.zoom, x, y);
 		}
@@ -314,6 +321,7 @@ class Map {
 			pin.draw(this._context, this._x, this._y, this._zoom);
 		});
 
+		this.tooltip.draw(this._context);
 		this.dialog.draw(this._context);
 	}
 }

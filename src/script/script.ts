@@ -26,9 +26,6 @@ const createPage = () => {
 
 	const tracker = new Tracker(challengeData, document.getElementById("challenges-container"));
 
-	const width = window.innerWidth;
-	const height = window.innerHeight;
-
 	let drag = false;
 	let dragX: number;
 	let dragY: number;
