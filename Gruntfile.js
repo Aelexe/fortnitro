@@ -251,7 +251,7 @@ module.exports = function(grunt) {
 				tasks: ["buildStyles", "deployStyles"]
 			},
 			images: {
-				files: ["src/**/*.png", "src/**/*.jpg"],
+				files: ["src/**/*.png", "src/**/*.jpg", "src/**/*.ico"],
 				tasks: ["buildImages", "deployImages"]
 			}
 		}
