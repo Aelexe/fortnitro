@@ -1,5 +1,4 @@
 export class Button {
-
 	/* Elements */
 	private _element;
 
@@ -7,7 +6,8 @@ export class Button {
 	private callback: () => void;
 
 	constructor(type: string) {
-		this._element = document.createElement("i");
+		this._element = document.createElement("img");
+		this._element.className = "button";
 		this._element.addEventListener("click", (e) => {
 			if (this.callback !== undefined) {
 				this.callback();
@@ -22,35 +22,32 @@ export class Button {
 	}
 
 	public setIcon(type: string) {
-		let iconClass;
+		let image;
 		switch (type) {
-			case "plus":
-				iconClass = "fa-plus";
-				break;
 			case "minus":
-				iconClass = "fa-minus";
+				image = "img/minus.png";
+				break;
+			case "plus":
+				image = "img/plus.png";
 				break;
 			case "complete":
-				iconClass = "fa-check";
+				image = "img/tick.png";
 				break;
 			case "next":
-				iconClass = "fa-arrow-right";
+				image = "img/next.png";
 				break;
 			case "reset":
-				iconClass = "fa-redo";
-				break;
-			case "cancel":
-				iconClass = "fa-ban";
+				image = "img/reset.png";
 				break;
 			case "lock":
-				iconClass = "fa-lock";
+				image = "img/lock.png";
 				break;
 			default:
-				iconClass = "";
+				image = "";
 				break;
 		}
 
-		this._element.className = "button fas " + iconClass;
+		this._element.src = image;
 	}
 
 	public show() {
@@ -64,5 +61,4 @@ export class Button {
 	public onClick(callback: () => void) {
 		this.callback = callback;
 	}
-
 }
