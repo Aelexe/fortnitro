@@ -115,7 +115,7 @@ module.exports = function(grunt) {
 					{
 						expand: true,
 						cwd: "src",
-						src: "**/*.html",
+						src: ["**/*.html", "**/.htaccess"],
 						dest: "dist"
 					}
 				]
@@ -125,7 +125,7 @@ module.exports = function(grunt) {
 					{
 						expand: true,
 						cwd: "dist",
-						src: "**/*.html",
+						src: ["**/*.html", "**/.htaccess"],
 						dest: DEPLOY_PATH
 					}
 				]
@@ -243,7 +243,7 @@ module.exports = function(grunt) {
 				tasks: ["validateCode", "buildCode", "deployCode"]
 			},
 			html: {
-				files: "src/**/*.html",
+				files: ["src/**/*.html", "src/**/.htaccess"],
 				tasks: ["buildHtml", "deployHtml"]
 			},
 			styles: {
