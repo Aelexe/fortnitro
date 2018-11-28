@@ -49,11 +49,11 @@ export class Dialog {
 	}
 
 	public setX(x: number) {
-		this.x = x;
+		this.x = Math.round(x);
 	}
 
 	public setY(y: number) {
-		this.y = y;
+		this.y = Math.round(y);
 	}
 
 	public setPosition(x: number, y: number) {
