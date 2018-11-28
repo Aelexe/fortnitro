@@ -60,6 +60,12 @@ header {
 	padding: 4px 10px;
 	background-color: @common-bg-color;
 
+	.logo {
+		width: 32px;
+		height: 32px;
+		image-rendering: pixelated;
+	}
+
 	h1 {
 		font-family: @secondary-font;
 		margin-left: 6px;
@@ -244,25 +250,9 @@ canvas {
 
 .button {
 	cursor: pointer;
-	background: @button-bg-color;
-	border-radius: 2px;
-	padding: 4px;
-
-	&.fa-arrow-right,
-	&.fa-check {
-		color: @button-green-color;
-	}
-
-	&.fa-ban,
-	&.fa-redo {
-		color: @button-red-color;
-	}
-
-	&.fa-lock {
-		background-color: @transparent-color;
-		color: @button-grey-color;
-		cursor: default;
-	}
+	width: 24px;
+	height: 24px;
+	image-rendering: pixelated;
 }
 
 .fa-arrow-right {

@@ -1,0 +1,2 @@
+Header set Cache-Control "public, must-revalidate"
+Header unset ETag
