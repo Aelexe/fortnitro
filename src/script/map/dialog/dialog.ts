@@ -9,15 +9,9 @@ export class Dialog {
 	private width: number;
 	private height: number;
 
-	private topLeft: HTMLImageElement = new Image();
-	private top: HTMLImageElement = new Image();
-	private topRight: HTMLImageElement = new Image();
-	private left: HTMLImageElement = new Image();
-	private center: HTMLImageElement = new Image();
-	private right: HTMLImageElement = new Image();
-	private bottomLeft: HTMLImageElement = new Image();
-	private bottom: HTMLImageElement = new Image();
-	private bottomRight: HTMLImageElement = new Image();
+	private corner: HTMLImageElement = new Image();
+	private border: HTMLImageElement = new Image();
+	private fill: HTMLImageElement = new Image();
 
 	private isHidden: boolean;
 
@@ -34,18 +28,12 @@ export class Dialog {
 		this.setWidth(width);
 		this.setHeight(height);
 
-		this.topLeft.src = "img/topleft.png";
-		this.top.src = "img/top.png";
-		this.topRight.src = "img/topright.png";
-		this.left.src = "img/left.png";
-		this.center.src = "img/center.png";
-		this.right.src = "img/right.png";
-		this.bottomLeft.src = "img/bottomleft.png";
-		this.bottom.src = "img/bottom.png";
-		this.bottomRight.src = "img/bottomright.png";
+		this.corner.src = "img/corner.png";
+		this.border.src = "img/border.png";
+		this.fill.src = "img/fill.png";
 
-		this.tickButton = new Button(this.width - 20 * 2 - 12, this.height - 20 - 8, 20, 20, "tick");
-		this.crossButton = new Button(this.width - 20 - 8, this.height - 20 - 8, 20, 20, "cross");
+		this.tickButton = new Button(this.width - 24 * 2 - 12, this.height - 24 - 8, 24, 24, "tick");
+		this.crossButton = new Button(this.width - 24 - 8, this.height - 24 - 8, 24, 24, "cross");
 	}
 
 	public setX(x: number) {
@@ -127,39 +115,63 @@ export class Dialog {
 			return;
 		}
 
+		const ninetyDegrees = 1.5708;
+
+		// TODO: Fix the tiles that might not draw correctly here.
+
 		// Corners
-		context.drawImage(this.topLeft, this.x, this.y, TILE_SIZE, TILE_SIZE);
-		context.drawImage(this.topRight, this.x + this.width - TILE_SIZE, this.y, TILE_SIZE, TILE_SIZE);
-		context.drawImage(this.bottomLeft, this.x, this.y + this.height - TILE_SIZE, TILE_SIZE, TILE_SIZE);
-		context.drawImage(
-			this.bottomRight,
-			this.x + this.width - TILE_SIZE,
-			this.y + this.height - TILE_SIZE,
-			TILE_SIZE,
-			TILE_SIZE
-		);
+		// Top Left
+		context.drawImage(this.corner, this.x, this.y, TILE_SIZE, TILE_SIZE);
+
+		// Top Right
+		context.save();
+		context.translate(this.x + this.width - TILE_SIZE, this.y);
+		context.rotate(ninetyDegrees);
+		context.drawImage(this.corner, 0, -TILE_SIZE, TILE_SIZE, TILE_SIZE);
+		context.restore();
+
+		// Bottom Left
+		context.save();
+		context.translate(this.x, this.y + this.height - TILE_SIZE);
+		context.rotate(-ninetyDegrees);
+		context.drawImage(this.corner, -TILE_SIZE, 0, TILE_SIZE, TILE_SIZE);
+		context.restore();
+
+		// Bottom Right
+		context.save();
+		context.translate(this.x + this.width - TILE_SIZE, this.y + this.height - TILE_SIZE);
+		context.rotate(ninetyDegrees * 2);
+		context.drawImage(this.corner, -TILE_SIZE, -TILE_SIZE, TILE_SIZE, TILE_SIZE);
+		context.restore();
 
 		// Borders
-		context.drawImage(this.top, this.x + TILE_SIZE, this.y, this.width - TILE_SIZE * 2, TILE_SIZE);
-		context.drawImage(
-			this.bottom,
-			this.x + TILE_SIZE,
-			this.y + this.height - TILE_SIZE,
-			this.width - TILE_SIZE * 2,
-			TILE_SIZE
-		);
-		context.drawImage(this.left, this.x, this.y + TILE_SIZE, TILE_SIZE, this.height - TILE_SIZE * 2);
-		context.drawImage(
-			this.right,
-			this.x + this.width - TILE_SIZE,
-			this.y + TILE_SIZE,
-			TILE_SIZE,
-			this.height - TILE_SIZE * 2
-		);
+		// Top
+		context.drawImage(this.border, this.x + TILE_SIZE, this.y, this.width - TILE_SIZE * 2, TILE_SIZE);
+
+		// Bottom
+		context.save();
+		context.translate(this.x + TILE_SIZE, this.y + this.height - TILE_SIZE);
+		context.rotate(ninetyDegrees * 2);
+		context.drawImage(this.border, 0, -TILE_SIZE, -(this.width - TILE_SIZE * 2), TILE_SIZE);
+		context.restore();
+
+		// Left
+		context.save();
+		context.translate(this.x, this.y);
+		context.rotate(-ninetyDegrees);
+		context.drawImage(this.border, -TILE_SIZE, 0, -TILE_SIZE, this.height - TILE_SIZE * 2);
+		context.restore();
+
+		// Right
+		context.save();
+		context.translate(this.x + this.width - TILE_SIZE, this.y + TILE_SIZE);
+		context.rotate(ninetyDegrees);
+		context.drawImage(this.border, 0, -TILE_SIZE, TILE_SIZE, this.height - TILE_SIZE * 2);
+		context.restore();
 
 		// Center
 		context.drawImage(
-			this.center,
+			this.fill,
 			this.x + TILE_SIZE,
 			this.y + TILE_SIZE,
 			this.width - TILE_SIZE * 2,
@@ -186,21 +198,5 @@ export class Dialog {
 
 		this.tickButton.draw(context, this.x, this.y);
 		this.crossButton.draw(context, this.x, this.y);
-
-		/*context.drawImage(
-			this.tick,
-			this.x + this.width - this.tick.width * 4 - 12,
-			this.y + this.height - this.tick.height * 2 - 8,
-			this.tick.width * 2,
-			this.tick.height * 2
-		);
-
-		context.drawImage(
-			this.cross,
-			this.x + this.width - this.tick.width * 2 - 8,
-			this.y + this.height - this.tick.height * 2 - 8,
-			this.tick.width * 2,
-			this.tick.height * 2
-		);*/
 	}
 }

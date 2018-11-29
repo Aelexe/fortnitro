@@ -34,7 +34,7 @@ class Map {
 	public initialise(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void {
 		this._element = canvas;
 		this._context = context;
-		this.dialog = new Dialog(100, 100, 176, 64);
+		this.dialog = new Dialog(100, 100, 176, 96);
 		this.dialog.hide();
 		this.tooltip = new Tooltip(0, 0, 176, 32);
 		this.tooltip.hide();
@@ -321,7 +321,7 @@ class Map {
 			pin.draw(this._context, this._x, this._y, this._zoom);
 		});
 
-		this.tooltip.draw(this._context);
+		// this.tooltip.draw(this._context);
 		this.dialog.draw(this._context);
 	}
 }
