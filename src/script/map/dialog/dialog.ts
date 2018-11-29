@@ -172,10 +172,15 @@ export class Dialog {
 
 		context.font = "14px Open Sans";
 		context.fillStyle = "black";
-		context.fillText(this.text, this.x + textXOffset - shadowOffset, this.y + textYOffset);
-		context.fillText(this.text, this.x + textXOffset + shadowOffset, this.y + textYOffset);
-		context.fillText(this.text, this.x + textXOffset, this.y + textYOffset + shadowOffset);
-		context.fillText(this.text, this.x + textXOffset, this.y + textYOffset - shadowOffset);
+
+		// Fill in the shadow for every pixel offset up until the shadow offset to ensure there are no gaps.
+		// Omitting this leads to a faded shadow which blurs the outline considerably.
+		for (let i = shadowOffset; i > 0; i--) {
+			context.fillText(this.text, this.x + textXOffset - i, this.y + textYOffset);
+			context.fillText(this.text, this.x + textXOffset + i, this.y + textYOffset);
+			context.fillText(this.text, this.x + textXOffset, this.y + textYOffset + i);
+			context.fillText(this.text, this.x + textXOffset, this.y + textYOffset - i);
+		}
 		context.fillStyle = "white";
 		context.fillText(this.text, this.x + textXOffset, this.y + textYOffset);
 
