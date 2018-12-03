@@ -70,10 +70,12 @@ export class Tracker {
 								});
 							}
 							challenge.addPin(pin);
+							pin.setParent(challenge);
 							map.addPin(pin);
 							pin.scale = 0;
 
 							setTimeout(() => {
+								pin.hover();
 								pin.unhover();
 							}, Math.random() * 1000);
 						});

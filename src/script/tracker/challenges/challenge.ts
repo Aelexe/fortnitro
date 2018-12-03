@@ -22,6 +22,8 @@ export class Challenge {
 	protected pins: Pin[] = [];
 	private listeners = [];
 
+	private isHovered: boolean = false;
+
 	/** The number of pins completed towards this challenge. */
 	protected _progress: number = 0;
 	/** The number of pins needed to complete the challenge. */
@@ -130,15 +132,32 @@ export class Challenge {
 	}
 
 	public hover() {
-		this.pins.forEach((pin) => {
-			pin.hover();
-		});
+		if (!this.isHovered) {
+			this.isHovered = true;
+			this.pins.forEach((pin) => {
+				pin.hover();
+			});
+		}
 	}
 
 	public unhover() {
-		this.pins.forEach((pin) => {
-			pin.unhover();
-		});
+		if (this.isHovered) {
+			this.isHovered = false;
+			this.pins.forEach((pin) => {
+				pin.unhover();
+			});
+		}
+	}
+
+	public highlight() {
+		if (!this._element.classList.contains("highlight")) {
+			this._element.scrollIntoView({ block: "center", behavior: "smooth" });
+			this._element.classList.add("highlight");
+		}
+	}
+
+	public unhighlight() {
+		this._element.classList.remove("highlight");
 	}
 
 	public addListener(listener) {
@@ -149,7 +168,7 @@ export class Challenge {
 		saveData.setChallengeCompletion(this.id, true);
 		this.setProgress(this._total);
 
-		this._element.className += " complete";
+		this._element.classList.add("complete");
 		this.completeButton.hide();
 		this.resetButton.show();
 
@@ -168,7 +187,7 @@ export class Challenge {
 		saveData.setChallengeCompletion(this.id, false);
 		this.setProgress(0);
 
-		this._element.className = "challenge";
+		this._element.classList.remove("complete");
 		this.resetButton.hide();
 		this.completeButton.show();
 

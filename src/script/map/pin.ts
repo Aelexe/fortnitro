@@ -1,4 +1,5 @@
 import { saveData } from "../data/save-data";
+import { Challenge } from "../tracker/challenges/challenge";
 
 import { map } from "./map";
 import { Hoverable } from "./hoverable";
@@ -25,6 +26,7 @@ export class Pin implements Hoverable {
 	private static readonly HOVER_SCALE: number = 1.5;
 
 	private id: string;
+	private parent: Challenge;
 	private rootX: number;
 	private rootY: number;
 	private _x: number;
@@ -83,6 +85,10 @@ export class Pin implements Hoverable {
 
 	public getId(): string {
 		return this.id;
+	}
+
+	public setParent(parent: Challenge): void {
+		this.parent = parent;
 	}
 
 	get x() {
@@ -145,6 +151,10 @@ export class Pin implements Hoverable {
 			map.addHoveredElement(this);
 			map.triggerUpdate();
 
+			if (this.parent !== undefined) {
+				this.parent.highlight();
+			}
+
 			this.linkedPins.forEach((linkedPin) => {
 				linkedPin.hover();
 			});
@@ -154,13 +164,19 @@ export class Pin implements Hoverable {
 	}
 
 	public unhover() {
-		this._hovered = false;
-		this.updateState();
-		map.triggerUpdate();
+		if (this._hovered) {
+			this._hovered = false;
+			this.updateState();
+			map.triggerUpdate();
 
-		this.linkedPins.forEach((linkedPin) => {
-			linkedPin.unhover();
-		});
+			if (this.parent !== undefined) {
+				this.parent.unhighlight();
+			}
+
+			this.linkedPins.forEach((linkedPin) => {
+				linkedPin.unhover();
+			});
+		}
 	}
 
 	private updateState() {
