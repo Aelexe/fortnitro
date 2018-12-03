@@ -41,6 +41,7 @@ export class Button {
 				break;
 			case "lock":
 				image = "img/lock.png";
+				this._element.style.cursor = "default";
 				break;
 			default:
 				image = "";
