@@ -2,11 +2,9 @@ import { prompt } from "../tracker/prompt";
 
 import { Pin } from "./pin";
 import { Dialog } from "./dialog";
-import { Tooltip } from "./dialog/tooltip";
 import { Hoverable } from "./hoverable";
 
 const MAP_IMAGE_SIZE: number = 2200;
-const ISOLATION_ZOOM: number = 1.4;
 
 class Map {
 	private static readonly UPDATE_TIMER = 1000 / 60;
@@ -30,7 +28,6 @@ class Map {
 
 	private _pins: Pin[] = [];
 	private dialog: Dialog;
-	private tooltip: Tooltip;
 
 	private lastHoverX: number = 0;
 	private lastHoverY: number = 0;
@@ -41,8 +38,6 @@ class Map {
 		this._context = context;
 		this.dialog = new Dialog(100, 100, 118, 64);
 		this.dialog.hide();
-		this.tooltip = new Tooltip(0, 0, 176, 32);
-		this.tooltip.hide();
 		context.imageSmoothingEnabled = false;
 	}
 
@@ -190,6 +185,22 @@ class Map {
 		});
 	}
 
+	private getPinsActiveOrdered() {
+		return this._pins
+			.filter((pin) => {
+				return pin.visible;
+			})
+			.sort((a, b) => {
+				if (a.y < b.y) {
+					return 1;
+				} else if (a.y > b.y) {
+					return -1;
+				} else {
+					return 0;
+				}
+			});
+	}
+
 	public addHoveredElement(hoveredElement: Hoverable): void {
 		this.hoveredElements.push(hoveredElement);
 	}
@@ -231,25 +242,20 @@ class Map {
 		}
 
 		if (!cursorOnDialog) {
-			let hoverCount = 0;
-			for (const pin of this._pins) {
-				if (pin.visible === false) {
-					continue;
-				}
+			let hoveredPin;
 
+			for (const pin of this.getPinsActiveOrdered()) {
 				const bounds = pin.getCanvasBounds(this.x, this.y, this.zoom);
 
 				if (x >= bounds.x && x <= bounds.x + bounds.width && (y >= bounds.y && y <= bounds.y + bounds.height)) {
 					hover = true;
-					hoverCount++;
-					pin.hover();
+					hoveredPin = pin;
+					break;
 				}
 			}
 
-			if (hoverCount === 1) {
-				this.tooltip.show();
-			} else {
-				this.tooltip.hide();
+			if (hoveredPin !== undefined) {
+				hoveredPin.hover();
 			}
 		}
 
@@ -271,8 +277,9 @@ class Map {
 			return;
 		}
 
-		const clickedPins = [];
-		this._pins.forEach((pin) => {
+		let clickedPin;
+
+		for (const pin of this.getPinsActiveOrdered()) {
 			if (pin.visible === false) {
 				return;
 			}
@@ -280,15 +287,12 @@ class Map {
 			const bounds = pin.getCanvasBounds(this.x, this.y, this.zoom);
 
 			if (x >= bounds.x && x <= bounds.x + bounds.width && (y >= bounds.y && y <= bounds.y + bounds.height)) {
-				clickedPins.push(pin);
+				clickedPin = pin;
+				break;
 			}
-		});
+		}
 
-		if (clickedPins.length === 0) {
-			return;
-		} else if (clickedPins.length === 1) {
-			const clickedPin = clickedPins[clickedPins.length - 1];
-
+		if (clickedPin !== undefined) {
 			// Offset horizontally to ensure the cursor isn't hovering the dialog buttons by default.
 			let dialogX = x - 50;
 			// Offset vertically to keep cursor inline with buttons.
@@ -315,8 +319,6 @@ class Map {
 
 			// Trigger a hover event to reset the cursor/pin state.
 			this.hover(x, y);
-		} else {
-			this.adjustZoom(ISOLATION_ZOOM - this.zoom, x, y);
 		}
 	}
 
@@ -384,7 +386,6 @@ class Map {
 			pin.draw(this._context, this._x, this._y, this._zoom);
 		});
 
-		// this.tooltip.draw(this._context);
 		this.dialog.draw(this._context);
 	}
 }
