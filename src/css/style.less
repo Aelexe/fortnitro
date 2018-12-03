@@ -36,8 +36,9 @@
 	clear: both;
 }
 
-.text-shadow(@size: 1px) {
-	text-shadow: -@size 0 black, 0 @size black, @size 0 black, 0 -@size black;
+.text-shadow(@size: 1px) when(@size > 0) {
+	.text-shadow(@size - 1);
+	text-shadow+: -@size 0 black, 0 @size black, @size 0 black, 0 -@size black;
 }
 
 * {
