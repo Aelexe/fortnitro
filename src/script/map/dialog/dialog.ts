@@ -94,6 +94,12 @@ export class Dialog {
 		map.triggerUpdate();
 	}
 
+	public closeDialog(): void {
+		this.hide();
+		this.removeConfirmCallback();
+		map.hover();
+	}
+
 	public setConfirmCallback(callback) {
 		this.callback = callback;
 	}
@@ -126,11 +132,9 @@ export class Dialog {
 			if (this.callback !== undefined) {
 				this.callback();
 			}
-			this.hide();
-			this.removeConfirmCallback();
+			this.closeDialog();
 		} else if (this.crossButton.click(x - this.x, y - this.y)) {
-			this.hide();
-			this.removeConfirmCallback();
+			this.closeDialog();
 		}
 
 		return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height;

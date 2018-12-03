@@ -32,6 +32,8 @@ class Map {
 	private dialog: Dialog;
 	private tooltip: Tooltip;
 
+	private lastHoverX: number = 0;
+	private lastHoverY: number = 0;
 	private hoveredElements: Hoverable[] = [];
 
 	public initialise(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void {
@@ -167,6 +169,14 @@ class Map {
 		this.triggerUpdate();
 	}
 
+	private enablePointer(): void {
+		this._element.style.cursor = "pointer";
+	}
+
+	private disablePointer(): void {
+		this._element.style.cursor = "default";
+	}
+
 	public addPin(pin: Pin) {
 		this._pins.push(pin);
 		this._pins.sort((pinA: Pin, pinB: Pin) => {
@@ -190,7 +200,22 @@ class Map {
 		}
 	}
 
-	public hover(x: number, y: number) {
+	/**
+	 * Trigger a hover event using the last hovered position.
+	 */
+	public hover();
+	/**
+	 * Trigger a hover event at the provided position.
+	 */
+	public hover(x: number, y: number);
+	public hover(x?: number, y?: number) {
+		if (x === undefined || y === undefined) {
+			x = this.lastHoverX;
+			y = this.lastHoverY;
+		} else {
+			this.lastHoverX = x;
+			this.lastHoverY = y;
+		}
 		this.unhoverAll();
 
 		let hover = false;
@@ -229,9 +254,9 @@ class Map {
 		}
 
 		if (hover) {
-			this._element.style.cursor = "pointer";
+			this.enablePointer();
 		} else {
-			this._element.style.cursor = "";
+			this.disablePointer();
 		}
 	}
 
@@ -264,9 +289,12 @@ class Map {
 		} else if (clickedPins.length === 1) {
 			const clickedPin = clickedPins[clickedPins.length - 1];
 
+			// Offset horizontally to ensure the cursor isn't hovering the dialog buttons by default.
 			let dialogX = x - 50;
+			// Offset vertically to keep cursor inline with buttons.
 			let dialogY = y - 44;
 
+			// Limit position to the canvas boundaries.
 			if (dialogX < 0) {
 				dialogX = 0;
 			} else if (dialogX + this.dialog.getWidth() > this._width) {
@@ -284,6 +312,9 @@ class Map {
 			this.dialog.setConfirmCallback(() => {
 				clickedPin.complete();
 			});
+
+			// Trigger a hover event to reset the cursor/pin state.
+			this.hover(x, y);
 		} else {
 			this.adjustZoom(ISOLATION_ZOOM - this.zoom, x, y);
 		}
