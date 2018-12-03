@@ -1,10 +1,13 @@
 import * as Cookies from "../lib/js.cookie";
 
 const DEFAULT_COOKIE_NAME = "default";
+const CURRENT_VERSION = 0;
 
 class SaveData {
 	private profileName: string;
 	private data;
+	private progress;
+	private config;
 
 	constructor(profileName?: string) {
 		this.loadCookie(profileName || DEFAULT_COOKIE_NAME);
@@ -16,9 +19,10 @@ class SaveData {
 
 		if (cookie !== undefined) {
 			this.data = JSON.parse(cookie);
+			this.progress = this.data.progress;
+			this.config = this.data.config;
 		} else {
-			this.data = {};
-			this.saveCookie();
+			this.resetCookie();
 		}
 	}
 
@@ -27,25 +31,31 @@ class SaveData {
 	}
 
 	public resetCookie() {
-		this.data = {};
+		this.data = {
+			version: CURRENT_VERSION,
+			progress: {},
+			config: {}
+		};
+		this.progress = this.data.progress;
+		this.config = this.data.config;
 		this.saveCookie();
 	}
 
 	public getChallengeCompletion(challengeId: string) {
-		return this.data[challengeId];
+		return this.progress[challengeId];
 	}
 
 	public setChallengeCompletion(challengeId: string, isComplete: boolean) {
-		this.data[challengeId] = isComplete;
+		this.progress[challengeId] = isComplete;
 		this.saveCookie();
 	}
 
 	public getPinCompletion(pinId: string) {
-		return this.data[pinId];
+		return this.progress[pinId];
 	}
 
 	public setPinCompletion(pinId: string, isComplete: boolean) {
-		this.data[pinId] = isComplete;
+		this.progress[pinId] = isComplete;
 		this.saveCookie();
 	}
 }
