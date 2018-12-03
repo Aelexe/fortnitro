@@ -1,6 +1,8 @@
 import { map } from "../map";
+import { Rectangle } from "../rectangle";
 
 import { Button } from "./button";
+
 const TILE_SIZE: number = 32;
 
 export class Dialog {
@@ -13,9 +15,9 @@ export class Dialog {
 	private border: HTMLImageElement = new Image();
 	private fill: HTMLImageElement = new Image();
 
-	private isHidden: boolean;
+	private _isHidden: boolean;
 
-	private text: string = "Complete challenge marker?";
+	private text: string = "Complete pin?";
 
 	private tickButton: Button;
 	private crossButton: Button;
@@ -49,12 +51,20 @@ export class Dialog {
 		this.setY(y);
 	}
 
+	public getWidth() {
+		return this.width;
+	}
+
 	public setWidth(width: number) {
 		if (width < TILE_SIZE * 2) {
 			this.width = TILE_SIZE * 2;
 		} else {
 			this.width = width;
 		}
+	}
+
+	public getHeight() {
+		return this.height;
 	}
 
 	public setHeight(height: number) {
@@ -65,13 +75,22 @@ export class Dialog {
 		}
 	}
 
+	public getBounds(): Rectangle {
+		// TODO: Cache for mild performance increase.
+		return new Rectangle(this.x, this.y, this.width, this.height);
+	}
+
+	public isHidden(): boolean {
+		return this._isHidden;
+	}
+
 	public hide(): void {
-		this.isHidden = true;
+		this._isHidden = true;
 		map.triggerUpdate();
 	}
 
 	public show(): void {
-		this.isHidden = false;
+		this._isHidden = false;
 		map.triggerUpdate();
 	}
 
@@ -84,15 +103,22 @@ export class Dialog {
 	}
 
 	public hover(x: number, y: number): boolean {
-		if (this.isHidden) {
+		if (this.isHidden()) {
 			return false;
 		}
 
-		if (x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height) {
-			return this.tickButton.hover(x - this.x, y - this.y) || this.crossButton.hover(x - this.x, y - this.y);
-		} else {
-			return false;
+		const relativeX = x - this.x;
+		const relativeY = y - this.y;
+
+		if (this.tickButton.getBounds().containsPoint(relativeX, relativeY)) {
+			this.tickButton.hover();
+			return true;
+		} else if (this.crossButton.getBounds().containsPoint(relativeX, relativeY)) {
+			this.crossButton.hover();
+			return true;
 		}
+
+		return false;
 	}
 
 	public click(x: number, y: number): boolean {
@@ -111,7 +137,7 @@ export class Dialog {
 	}
 
 	public draw(context: CanvasRenderingContext2D) {
-		if (this.isHidden) {
+		if (this.isHidden()) {
 			return;
 		}
 

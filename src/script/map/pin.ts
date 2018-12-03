@@ -1,6 +1,7 @@
-import { map } from "./map";
-
 import { saveData } from "../data/save-data";
+
+import { map } from "./map";
+import { Hoverable } from "./hoverable";
 
 const pinMap = {
 	streetLight: "speakerpin",
@@ -18,7 +19,7 @@ const pinMap = {
 
 const imageMap = {};
 
-export class Pin {
+export class Pin implements Hoverable {
 	private static readonly DEFAULT_SCALE: number = 1;
 	private static readonly HIDDEN_SCALE: number = 0;
 	private static readonly HOVER_SCALE: number = 1.5;
@@ -141,6 +142,7 @@ export class Pin {
 		if (!this._hovered) {
 			this._hovered = true;
 			this.updateState();
+			map.addHoveredElement(this);
 			map.triggerUpdate();
 
 			this.linkedPins.forEach((linkedPin) => {

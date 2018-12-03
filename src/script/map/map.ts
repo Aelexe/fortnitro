@@ -3,6 +3,7 @@ import { prompt } from "../tracker/prompt";
 import { Pin } from "./pin";
 import { Dialog } from "./dialog";
 import { Tooltip } from "./dialog/tooltip";
+import { Hoverable } from "./hoverable";
 
 const MAP_IMAGE_SIZE: number = 2200;
 const ISOLATION_ZOOM: number = 1.4;
@@ -31,10 +32,12 @@ class Map {
 	private dialog: Dialog;
 	private tooltip: Tooltip;
 
+	private hoveredElements: Hoverable[] = [];
+
 	public initialise(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void {
 		this._element = canvas;
 		this._context = context;
-		this.dialog = new Dialog(100, 100, 176, 96);
+		this.dialog = new Dialog(100, 100, 118, 64);
 		this.dialog.hide();
 		this.tooltip = new Tooltip(0, 0, 176, 32);
 		this.tooltip.hide();
@@ -177,17 +180,32 @@ class Map {
 		});
 	}
 
+	public addHoveredElement(hoveredElement: Hoverable): void {
+		this.hoveredElements.push(hoveredElement);
+	}
+
+	private unhoverAll(): void {
+		while (this.hoveredElements.length > 0) {
+			this.hoveredElements.pop().unhover();
+		}
+	}
+
 	public hover(x: number, y: number) {
-		this.tooltip.setPosition(x, y);
+		this.unhoverAll();
+
 		let hover = false;
+		let cursorOnDialog = false;
 
-		this._pins.forEach((pin) => {
-			pin.unhover();
-		});
+		if (!this.dialog.isHidden()) {
+			cursorOnDialog = this.dialog.getBounds().containsPoint(x, y);
+			if (cursorOnDialog) {
+				hover = this.dialog.hover(x, y);
+			} else {
+				this.dialog.hide();
+			}
+		}
 
-		hover = this.dialog.hover(x, y);
-
-		if (!hover) {
+		if (!cursorOnDialog) {
 			let hoverCount = 0;
 			for (const pin of this._pins) {
 				if (pin.visible === false) {
@@ -220,7 +238,9 @@ class Map {
 	public click(x: number, y: number) {
 		let clicked = false;
 
-		clicked = this.dialog.click(x, y);
+		if (!this.dialog.isHidden()) {
+			clicked = this.dialog.click(x, y);
+		}
 
 		if (clicked) {
 			return;
@@ -243,10 +263,22 @@ class Map {
 			return;
 		} else if (clickedPins.length === 1) {
 			const clickedPin = clickedPins[clickedPins.length - 1];
-			const bounds = clickedPin.getCanvasBounds(this.x, this.y, this.zoom);
 
-			const dialogX = bounds.x - prompt.element.offsetWidth / 2 + bounds.width / 2;
-			const dialogY = bounds.y - prompt.element.offsetHeight;
+			let dialogX = x - 50;
+			let dialogY = y - 44;
+
+			if (dialogX < 0) {
+				dialogX = 0;
+			} else if (dialogX + this.dialog.getWidth() > this._width) {
+				dialogX = this._width - this.dialog.getWidth();
+			}
+
+			if (dialogY < 0) {
+				dialogY = 0;
+			} else if (dialogY + this.dialog.getHeight() > this._height) {
+				dialogY = this._height - this.dialog.getHeight();
+			}
+
 			this.dialog.setPosition(dialogX, dialogY);
 			this.dialog.show();
 			this.dialog.setConfirmCallback(() => {
