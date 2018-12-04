@@ -1,12 +1,9 @@
 import { map } from "./map";
-import { prompt } from "./tracker/prompt";
 import { Tracker } from "./tracker";
 import challengeData from "./data/challenge-data";
 
 const createPage = () => {
-	prompt.hide();
 	const canvasContainer = document.getElementById("canvas-container");
-	canvasContainer.insertBefore(prompt.element, canvasContainer.childNodes[0]);
 
 	const canvas: HTMLCanvasElement = document.getElementById("canvas") as HTMLCanvasElement;
 	const context: CanvasRenderingContext2D = canvas.getContext("2d");
@@ -34,9 +31,6 @@ const createPage = () => {
 		drag = true;
 		dragX = event.clientX;
 		dragY = event.clientY;
-
-		prompt.removeConfirmCallback();
-		prompt.hide();
 	});
 	window.addEventListener("mouseup", (event) => {
 		drag = false;

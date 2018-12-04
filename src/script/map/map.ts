@@ -1,5 +1,3 @@
-import { prompt } from "../tracker/prompt";
-
 import { Pin } from "./pin";
 import { Dialog } from "./dialog";
 import { Hoverable } from "./hoverable";
