@@ -106,7 +106,7 @@ export class MinorSet {
 		this.collapsed = true;
 		// Get current height of list.
 		const listHeight = this._listElement.clientHeight;
-		this._listContainer.style.height = listHeight;
+		this._listContainer.style.height = listHeight + "px";
 		setTimeout(() => {
 			this._listContainer.style.height = "0px";
 			this._listElement.style.top = -listHeight;
@@ -119,7 +119,7 @@ export class MinorSet {
 		// Get current height of list.
 		const listHeight = this._listElement.clientHeight;
 		setTimeout(() => {
-			this._listContainer.style.height = listHeight;
+			this._listContainer.style.height = listHeight + "px";
 			this._listElement.style.top = 0;
 		}, 10);
 		this._collapseButton.setIcon("minus");
