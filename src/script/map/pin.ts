@@ -87,6 +87,10 @@ export class Pin implements Hoverable {
 		return this.id;
 	}
 
+	public getParent(): Challenge {
+		return this.parent;
+	}
+
 	public setParent(parent: Challenge): void {
 		this.parent = parent;
 	}
@@ -151,10 +155,6 @@ export class Pin implements Hoverable {
 			map.addHoveredElement(this);
 			map.triggerUpdate();
 
-			if (this.parent !== undefined) {
-				this.parent.highlight();
-			}
-
 			this.linkedPins.forEach((linkedPin) => {
 				linkedPin.hover();
 			});
@@ -168,10 +168,6 @@ export class Pin implements Hoverable {
 			this._hovered = false;
 			this.updateState();
 			map.triggerUpdate();
-
-			if (this.parent !== undefined) {
-				this.parent.unhighlight();
-			}
 
 			this.linkedPins.forEach((linkedPin) => {
 				linkedPin.unhover();

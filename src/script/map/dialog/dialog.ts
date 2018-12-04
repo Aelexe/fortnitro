@@ -23,6 +23,7 @@ export class Dialog {
 	private crossButton: Button;
 
 	private callback;
+	private closeCallback;
 
 	constructor(x, y, width, height) {
 		this.x = x;
@@ -97,6 +98,10 @@ export class Dialog {
 	public closeDialog(): void {
 		this.hide();
 		this.removeConfirmCallback();
+		if (this.closeCallback !== undefined) {
+			this.closeCallback();
+			this.removeCloseCallback();
+		}
 		map.hover();
 	}
 
@@ -106,6 +111,14 @@ export class Dialog {
 
 	public removeConfirmCallback() {
 		this.callback = undefined;
+	}
+
+	public setCloseCallback(callback) {
+		this.closeCallback = callback;
+	}
+
+	public removeCloseCallback() {
+		this.closeCallback = undefined;
 	}
 
 	public hover(x: number, y: number): boolean {

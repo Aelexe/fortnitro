@@ -235,7 +235,7 @@ class Map {
 			if (cursorOnDialog) {
 				hover = this.dialog.hover(x, y);
 			} else {
-				this.dialog.hide();
+				this.dialog.closeDialog();
 			}
 		}
 
@@ -314,6 +314,13 @@ class Map {
 			this.dialog.setConfirmCallback(() => {
 				clickedPin.complete();
 			});
+
+			if (clickedPin.getParent() !== undefined) {
+				clickedPin.getParent().highlight();
+				this.dialog.setCloseCallback(() => {
+					clickedPin.getParent().unhighlight();
+				});
+			}
 
 			// Trigger a hover event to reset the cursor/pin state.
 			this.hover(x, y);
