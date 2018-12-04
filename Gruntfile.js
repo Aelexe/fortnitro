@@ -74,9 +74,14 @@ module.exports = function(grunt) {
 					force: true
 				}
 			},
-			distImages: ["dist/**/*.png", "dist/**/*.jpg", "dist/**/*.ico"],
+			distImages: ["dist/**/*.png", "dist/**/*.jpg", "dist/**/*.svg", "dist/**/*.ico"],
 			deployImages: {
-				src: [DEPLOY_PATH + "/**/*.png", DEPLOY_PATH + "/**/*.jpg", DEPLOY_PATH + "/**/*.ico"],
+				src: [
+					DEPLOY_PATH + "/**/*.png",
+					DEPLOY_PATH + "/**/*.jpg",
+					DEPLOY_PATH + "/**/*.svg",
+					DEPLOY_PATH + "/**/*.ico"
+				],
 				options: {
 					force: true
 				}
@@ -155,7 +160,7 @@ module.exports = function(grunt) {
 					{
 						expand: true,
 						cwd: "src",
-						src: ["**/*.png", "**/*.jpg", "**/*.ico"],
+						src: ["**/*.png", "**/*.jpg", "**/*.svg", "**/*.ico"],
 						dest: "dist"
 					}
 				]
@@ -165,7 +170,7 @@ module.exports = function(grunt) {
 					{
 						expand: true,
 						cwd: "dist",
-						src: ["**/*.png", "**/*.jpg", "**/*.ico"],
+						src: ["**/*.png", "**/*.jpg", "**/*.svg", "**/*.ico"],
 						dest: DEPLOY_PATH
 					}
 				]
@@ -251,7 +256,7 @@ module.exports = function(grunt) {
 				tasks: ["buildStyles", "deployStyles"]
 			},
 			images: {
-				files: ["src/**/*.png", "src/**/*.jpg", "src/**/*.ico"],
+				files: ["src/**/*.png", "src/**/*.jpg", "src/**/*.svg", "src/**/*.ico"],
 				tasks: ["buildImages", "deployImages"]
 			}
 		}
