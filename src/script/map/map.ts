@@ -4,6 +4,10 @@ import { Hoverable } from "./hoverable";
 
 const MAP_IMAGE_SIZE: number = 2200;
 
+interface CanvasRendereringContext2D {
+	msImageSmoothingEnabled;
+}
+
 class Map {
 	private static readonly UPDATE_TIMER = 1000 / 60;
 
@@ -37,6 +41,7 @@ class Map {
 		this.dialog = new Dialog(100, 100, 118, 64);
 		this.dialog.hide();
 		context.imageSmoothingEnabled = false;
+		((this._context as unknown) as CanvasRendereringContext2D).msImageSmoothingEnabled = false;
 	}
 
 	public loadImage() {
@@ -84,6 +89,7 @@ class Map {
 		this.targetZoom = this._zoom;
 
 		this._context.imageSmoothingEnabled = false;
+		((this._context as unknown) as CanvasRendereringContext2D).msImageSmoothingEnabled = false;
 
 		this.triggerUpdate();
 	}
