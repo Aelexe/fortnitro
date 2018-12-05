@@ -3,6 +3,7 @@ import { Tracker } from "./tracker";
 import challengeData from "./data/challenge-data";
 
 const createPage = () => {
+	const challengesContainer = document.getElementById("challenges-container");
 	const canvasContainer = document.getElementById("canvas-container");
 
 	const canvas: HTMLCanvasElement = document.getElementById("canvas") as HTMLCanvasElement;
@@ -12,7 +13,7 @@ const createPage = () => {
 	map.loadImage();
 
 	const updateMapSize = () => {
-		map.setSize(canvasContainer.clientHeight);
+		map.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
 	};
 
 	updateMapSize();
@@ -21,7 +22,7 @@ const createPage = () => {
 		updateMapSize();
 	};
 
-	const tracker = new Tracker(challengeData, document.getElementById("challenges-container"));
+	const tracker = new Tracker(challengeData, challengesContainer);
 
 	let drag = false;
 	let dragX: number;

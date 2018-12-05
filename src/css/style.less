@@ -1,3 +1,10 @@
+/* Media Queries */
+@phone: ~"(min-width: 576px)";
+@tablet: ~"(min-width: 768px)";
+@desktop-small: ~"(min-width: 992px)";
+@desktop: ~"(min-width: 1200px)";
+@max-size: ~"(min-width: 1350px)";
+
 /* Fonts */
 @primary-font: "Open Sans", sans-serif;
 @secondary-font: "Oswald", sans-serif;
@@ -93,27 +100,33 @@ header {
 }
 
 #content {
-	position: relative;
-	height: calc(100% - 40px);
+	display: flex;
+	height: calc(100% - 40px - 20px);
+	margin: 10px;
+
+	@media @max-size {
+		max-width: 1350px;
+	}
 }
 
 #challenges-container {
-	position: absolute;
-	top: 10px;
+	flex-shrink: 0;
 	width: 460px;
-	max-height: calc(100% - 20px);
+	max-height: 100%;
 	color: @white-color;
-	left: 10px;
 	overflow-y: scroll;
 }
 
 #canvas-container {
-	position: absolute;
-	top: 10px;
-	left: 500px;
+	flex-grow: 1;
+	flex-shrink: 1;
 	box-sizing: border-box;
-	height: calc(100% - 20px);
+	height: 100%;
 	border: 6px solid rgba(30, 46, 81, 0.7);
+	margin-left: 10px;
+	/* Hiding the overflow allows the container to resize despite the inner canvas being larger.
+		 The canvas can then reset its size to match. */
+	overflow: hidden;
 }
 
 canvas {
@@ -202,6 +215,7 @@ canvas {
 }
 
 .challenge {
+	display: flex;
 	background-color: @challenge-bg-color;
 	background-size: 200% 100%;
 	background-position: right bottom;
@@ -224,13 +238,8 @@ canvas {
 		transition: background-position 300ms, background-color 0;
 	}
 
-	&:after {
-		.clear-fix();
-	}
-
 	.left-block {
-		float: left;
-		width: 85%;
+		flex-grow: 1;
 
 		.description {
 			display: inline-block;
@@ -251,10 +260,12 @@ canvas {
 	}
 
 	.right-block {
-		float: right;
-		height: 34px;
 		display: flex;
 		align-items: center;
+
+		.buttons {
+			margin-left: 30px;
+		}
 	}
 }
 

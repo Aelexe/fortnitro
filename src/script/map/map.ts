@@ -79,12 +79,15 @@ class Map {
 		this.targetX = x;
 	}
 
-	public setSize(size: number) {
-		this._element.width = size;
-		this._element.height = size;
-		this._width = size;
-		this._height = size;
-		this._zoomMin = size / MAP_IMAGE_SIZE;
+	public setSize(width: number, height: number) {
+		this._element.width = width;
+		this._element.height = height;
+		this._width = width;
+		this._height = height;
+
+		const largestSide = width > height ? width : height;
+
+		this._zoomMin = largestSide / MAP_IMAGE_SIZE;
 		this._zoom = this._zoomMin;
 		this.targetZoom = this._zoom;
 
