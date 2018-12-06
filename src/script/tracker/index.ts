@@ -93,9 +93,6 @@ export class Tracker {
 	}
 
 	private loadCookies(): void {
-		// TODO: Remove this.
-		saveData.resetCookie();
-
 		this.challenges.forEach((challenge) => {
 			challenge.getPins().forEach((pin) => {
 				if (saveData.getPinCompletion(pin.getId())) {

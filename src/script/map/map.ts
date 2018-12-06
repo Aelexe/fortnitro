@@ -346,7 +346,6 @@ class Map {
 	}
 
 	private update() {
-		// TODO UPDATE_TIMER
 		this.shouldUpdate = false;
 
 		this.updatePosition();

@@ -7,7 +7,6 @@ import { Pin } from "../../map/pin";
 
 import { saveData } from "../../data/save-data";
 
-// TODO Check this class for things that can be removed after draw scheduling.
 export class StagedChallenge extends ProgressChallenge {
 	private nextButton: Button;
 
@@ -26,7 +25,6 @@ export class StagedChallenge extends ProgressChallenge {
 		this._buttonsElement.appendChild(this.nextButton.element);
 
 		this.nextButton.element.addEventListener("click", () => {
-			// TODO Fix progress saving for non pins.
 			if (this.pins.length !== 0) {
 				this.pins[this._progress].complete();
 			} else {
