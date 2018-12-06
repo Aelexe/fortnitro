@@ -1,33 +1,30 @@
 {
-  "name": "fortnite-map",
-  "version": "1.0.0",
-  "description": "",
-  "main": "challenge-tracker.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "autoprefixer": "^9.3.1",
-    "cssnano": "^4.1.7",
-    "grunt": "^1.0.3",
-    "grunt-contrib-clean": "^2.0.0",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-less": "^2.0.0",
-    "grunt-contrib-watch": "^1.1.0",
-    "grunt-postcss": "^0.9.0",
-    "grunt-ts": "^6.0.0-beta.21",
-    "grunt-tslint": "^5.0.2",
-    "grunt-webpack": "^3.1.3",
-    "load-grunt-tasks": "^4.0.0",
-    "ts-loader": "^5.3.0",
-    "tslint": "^5.11.0",
-    "typescript": "^3.0.3",
-    "uglify-js": "^3.4.9",
-    "webpack": "^4.26.0"
-  },
-  "dependencies": {
-    "js-cookie": "^2.2.0"
-  }
+	"name": "fortnite-map",
+	"version": "1.0.0",
+	"description": "",
+	"main": "challenge-tracker.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"autoprefixer": "^9.3.1",
+		"cssnano": "^4.1.7",
+		"grunt": "^1.0.3",
+		"grunt-contrib-clean": "^2.0.0",
+		"grunt-contrib-copy": "^1.0.0",
+		"grunt-contrib-less": "^2.0.0",
+		"grunt-contrib-watch": "^1.1.0",
+		"grunt-postcss": "^0.9.0",
+		"grunt-ts": "^6.0.0-beta.21",
+		"grunt-tslint": "^5.0.2",
+		"grunt-webpack": "^3.1.3",
+		"load-grunt-tasks": "^4.0.0",
+		"ts-loader": "^5.3.0",
+		"tslint": "^5.11.0",
+		"typescript": "^3.0.3",
+		"uglify-js": "^3.4.9",
+		"webpack": "^4.26.0"
+	}
 }
