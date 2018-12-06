@@ -110,5 +110,11 @@ export class Tracker {
 				challenge.setProgress(saveData.getChallengeProgress(challenge.getId()));
 			}
 		});
+
+		this.minorSets.forEach((minorSet) => {
+			if (minorSet.isComplete()) {
+				minorSet.collapse(true);
+			}
+		});
 	}
 }

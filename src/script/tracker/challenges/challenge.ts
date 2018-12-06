@@ -119,11 +119,14 @@ export class Challenge {
 		this.pins.push(pin);
 
 		pin.addListener((pinn, status) => {
-			if (status === "complete") {
-				pinn.hide();
-				this.setProgress(this.getProgress() + 1);
-				map.draw();
-			}
+			let progress = 0;
+			this.pins.forEach((pinCheck) => {
+				if (pinCheck.isComplete()) {
+					progress++;
+				}
+			});
+
+			this.setProgress(progress);
 		});
 	}
 

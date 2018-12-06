@@ -102,15 +102,33 @@ export class MinorSet {
 		});
 	}
 
-	public collapse(): void {
+	public isComplete(): boolean {
+		for (const challenge of this.challenges) {
+			if (!challenge.isComplete()) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public collapse(instant: boolean = false): void {
 		this.collapsed = true;
-		// Get current height of list.
-		const listHeight = this._listElement.clientHeight;
-		this._listContainer.style.height = listHeight + "px";
-		setTimeout(() => {
+
+		if (!instant) {
+			// Get current height of list.
+			const listHeight = this._listElement.clientHeight;
+			this._listContainer.style.height = listHeight + "px";
+			setTimeout(() => {
+				this._listContainer.style.height = "0px";
+				this._listElement.style.top = -listHeight;
+			}, 10);
+		} else {
+			const listHeight = this._listElement.clientHeight;
 			this._listContainer.style.height = "0px";
 			this._listElement.style.top = -listHeight;
-		}, 10);
+		}
+
 		this._collapseButton.setIcon("plus");
 	}
 

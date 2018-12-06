@@ -39,7 +39,7 @@ export class Pin implements Hoverable {
 	private targetScale: number = 1;
 	private image: HTMLImageElement;
 
-	private isComplete: boolean = false;
+	private _isComplete: boolean = false;
 	private _visible: boolean = true;
 	private _hovered: boolean = false;
 
@@ -210,10 +210,13 @@ export class Pin implements Hoverable {
 			}
 		});
 	}
+	public isComplete() {
+		return this._isComplete;
+	}
 
 	public complete() {
-		if (!this.isComplete) {
-			this.isComplete = true;
+		if (!this._isComplete) {
+			this._isComplete = true;
 			saveData.setPinCompletion(this.id, true);
 			this.hide();
 			this.emit("complete");
@@ -221,16 +224,14 @@ export class Pin implements Hoverable {
 	}
 
 	public reset() {
-		if (this.isComplete) {
-			this.isComplete = false;
+		if (this._isComplete) {
+			this._isComplete = false;
 			saveData.setPinCompletion(this.id, false);
 			this.show();
 
 			this.linkedPins.forEach((linkedPin) => {
 				linkedPin.reset();
 			});
-
-			this.emit("reset");
 		}
 	}
 

@@ -148,9 +148,8 @@ const challengeData = {
 						},
 						{
 							id: "s6_w2_c2",
-							type: "progress",
-							description: "Use a Shadow Stone in 3 different matches",
-							amount: 3
+							type: "simple",
+							description: "Use a Shadow Stone in 3 different matches"
 						},
 						{
 							id: "s6_w2_c3",

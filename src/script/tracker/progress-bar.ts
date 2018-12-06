@@ -11,14 +11,18 @@ export class ProgressBar {
 		this._fill.className = "progress-bar-fill";
 		this._element.appendChild(this._fill);
 
-		this.progress = 0;
+		this.setProgress(0);
 	}
 
 	get element() {
 		return this._element;
 	}
 
-	set progress(progress: number) {
+	/**
+	 * Sets the progress of the progress bar.
+	 * @param progress The progress as a percentage
+	 */
+	public setProgress(progress: number) {
 		const progressString = progress * 100 + "%";
 		this._fill.style.width = progressString;
 	}

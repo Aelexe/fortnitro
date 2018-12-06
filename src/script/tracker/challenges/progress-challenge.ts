@@ -21,6 +21,11 @@ export class ProgressChallenge extends Challenge {
 	public setProgress(progress: number) {
 		super.setProgress(progress);
 
-		this.progressBar.progress = progress / this._total;
+		let progressPercent = progress / this._total;
+		if (progressPercent > 1) {
+			progressPercent = 1;
+		}
+
+		this.progressBar.setProgress(progressPercent);
 	}
 }
