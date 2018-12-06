@@ -5,8 +5,9 @@ const CURRENT_VERSION = 0;
 
 class SaveData {
 	private profileName: string;
-	private data;
-	private progress;
+	private cookie;
+	private challenges;
+	private pins;
 	private config;
 
 	constructor(profileName?: string) {
@@ -18,44 +19,74 @@ class SaveData {
 		const cookie: string = Cookies.get(this.profileName);
 
 		if (cookie !== undefined) {
-			this.data = JSON.parse(cookie);
-			this.progress = this.data.progress;
-			this.config = this.data.config;
+			this.cookie = JSON.parse(cookie);
+			this.challenges = this.cookie.progress.challenges;
+			this.pins = this.cookie.progress.pins;
+			this.config = this.cookie.config;
 		} else {
 			this.resetCookie();
 		}
 	}
 
 	private saveCookie() {
-		Cookies.set(this.profileName, JSON.stringify(this.data));
+		Cookies.set(this.profileName, JSON.stringify(this.cookie));
 	}
 
 	public resetCookie() {
-		this.data = {
+		this.cookie = {
 			version: CURRENT_VERSION,
-			progress: {},
+			progress: {
+				challenges: {},
+				pins: {}
+			},
 			config: {}
 		};
-		this.progress = this.data.progress;
-		this.config = this.data.config;
+		this.challenges = this.cookie.progress.challenges;
+		this.pins = this.cookie.progress.pins;
+		this.config = this.cookie.config;
 		this.saveCookie();
 	}
 
-	public getChallengeCompletion(challengeId: string) {
-		return this.progress[challengeId];
+	public getChallenge(challengeId: string) {
+		if (this.challenges[challengeId] === undefined) {
+			this.challenges[challengeId] = {};
+		}
+
+		return this.challenges[challengeId];
+	}
+
+	public getChallengeCompletion(challengeId: string): boolean {
+		return this.getChallenge(challengeId).isComplete;
 	}
 
 	public setChallengeCompletion(challengeId: string, isComplete: boolean) {
-		this.progress[challengeId] = isComplete;
+		this.getChallenge(challengeId).isComplete = isComplete;
 		this.saveCookie();
 	}
 
+	public getChallengeProgress(challengeId: string): number {
+		return this.getChallenge(challengeId).progress;
+	}
+
+	public setChallengeProgress(challengeId: string, progress: number) {
+		this.getChallenge(challengeId).progress = progress;
+		this.saveCookie();
+	}
+
+	public getPin(pinId: string) {
+		if (this.pins[pinId] === undefined) {
+			this.pins[pinId] = {};
+		}
+
+		return this.pins[pinId];
+	}
+
 	public getPinCompletion(pinId: string) {
-		return this.progress[pinId];
+		return this.getPin(pinId).isComplete;
 	}
 
 	public setPinCompletion(pinId: string, isComplete: boolean) {
-		this.progress[pinId] = isComplete;
+		this.getPin(pinId).isComplete = isComplete;
 		this.saveCookie();
 	}
 }

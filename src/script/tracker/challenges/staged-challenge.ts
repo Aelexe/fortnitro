@@ -5,6 +5,8 @@ import { Button } from "../button";
 import { map } from "../../map/map";
 import { Pin } from "../../map/pin";
 
+import { saveData } from "../../data/save-data";
+
 // TODO Check this class for things that can be removed after draw scheduling.
 export class StagedChallenge extends ProgressChallenge {
 	private nextButton: Button;
@@ -37,6 +39,10 @@ export class StagedChallenge extends ProgressChallenge {
 
 	public setProgress(progress: number) {
 		super.setProgress(progress);
+
+		if (this.pins.length === 0) {
+			saveData.setChallengeProgress(this.id, progress);
+		}
 
 		this.updateDisplay();
 	}

@@ -137,13 +137,13 @@ const challengeData = {
 							amount: 7,
 							pinType: "multi",
 							pins: [
-								{ x: 496, y: 824, image: "corruption" },
-								{ x: 1186, y: 694, image: "corruption" },
-								{ x: 1750, y: 734, image: "corruption" },
-								{ x: 1164, y: 1214, image: "corruption" },
-								{ x: 674, y: 1448, image: "corruption" },
-								{ x: 1254, y: 1580, image: "corruption" },
-								{ x: 1740, y: 1300, image: "corruption" }
+								{ id: "s6_w2_c1_p1", x: 496, y: 824, image: "corruption" },
+								{ id: "s6_w2_c1_p2", x: 1186, y: 694, image: "corruption" },
+								{ id: "s6_w2_c1_p3", x: 1750, y: 734, image: "corruption" },
+								{ id: "s6_w2_c1_p4", x: 1164, y: 1214, image: "corruption" },
+								{ id: "s6_w2_c1_p5", x: 674, y: 1448, image: "corruption" },
+								{ id: "s6_w2_c1_p6", x: 1254, y: 1580, image: "corruption" },
+								{ id: "s6_w2_c1_p7", x: 1740, y: 1300, image: "corruption" }
 							]
 						},
 						{

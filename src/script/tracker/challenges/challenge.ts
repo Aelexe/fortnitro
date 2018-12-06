@@ -16,7 +16,7 @@ export class Challenge {
 	private resetButton: Button;
 
 	/* Properties */
-	private id: string;
+	protected id: string;
 	protected type: string;
 	private _description: string;
 	protected pins: Pin[] = [];

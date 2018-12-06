@@ -106,6 +106,8 @@ export class Tracker {
 			});
 			if (saveData.getChallengeCompletion(challenge.getId())) {
 				challenge.complete();
+			} else if (saveData.getChallengeProgress(challenge.getId()) !== undefined) {
+				challenge.setProgress(saveData.getChallengeProgress(challenge.getId()));
 			}
 		});
 	}
