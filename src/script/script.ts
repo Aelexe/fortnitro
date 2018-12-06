@@ -3,6 +3,13 @@ import { Tracker } from "./tracker";
 import challengeData from "./data/challenge-data";
 
 const createPage = () => {
+	document.getElementById("info-button").addEventListener("click", () => {
+		alert(
+			"This site is not affiliated with Epic Games or Fortnite." +
+				"\nAll trademarks referenced herein are the properties of their respective owners." +
+				"\n\nAlso sorry for the alert box. I'll make something nicer later."
+		);
+	});
 	const challengesContainer = document.getElementById("challenges-container");
 	const canvasContainer = document.getElementById("canvas-container");
 
