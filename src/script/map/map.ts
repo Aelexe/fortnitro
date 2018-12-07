@@ -2,7 +2,7 @@ import { Pin } from "./pin";
 import { Dialog } from "./dialog";
 import { Hoverable } from "./hoverable";
 
-const MAP_IMAGE_SIZE: number = 2200;
+const MAP_IMAGE_SIZE: number = 1600;
 
 interface CanvasRendereringContext2D {
 	msImageSmoothingEnabled;

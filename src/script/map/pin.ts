@@ -15,6 +15,7 @@ const pinMap = {
 	apple: "applepin",
 	hoop: "hooppin",
 	speed: "speedpin",
+	dance: "dance",
 	question: "questionpin"
 };
 
