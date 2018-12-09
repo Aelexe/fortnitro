@@ -31,6 +31,10 @@ class SaveData {
 			pins: {}
 		};
 		this.data.config = {};
+
+		this.challenges = this.data.progress.challenges;
+		this.pins = this.data.progress.pins;
+		this.config = this.data.progress.config;
 	}
 
 	private loadData() {
