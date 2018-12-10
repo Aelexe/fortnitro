@@ -130,7 +130,7 @@ module.exports = function(grunt) {
 					{
 						expand: true,
 						cwd: "dist",
-						src: ["**/*.html", "**/.htaccess"],
+						src: ["**/*.html"],
 						dest: DEPLOY_PATH
 					}
 				]
