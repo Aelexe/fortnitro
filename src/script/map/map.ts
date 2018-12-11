@@ -1,8 +1,14 @@
 import { Pin } from "./pin";
+import { Button } from "./button";
 import { Dialog } from "./dialog";
 import { Hoverable } from "./hoverable";
 
 const MAP_IMAGE_SIZE: number = 1600;
+
+const plusImage = new Image();
+plusImage.src = "img/plus.png";
+const minusImage = new Image();
+minusImage.src = "img/minus.png";
 
 interface CanvasRendereringContext2D {
 	msImageSmoothingEnabled;
@@ -29,6 +35,8 @@ class Map {
 	private isUpdating: boolean = false;
 
 	private _pins: Pin[] = [];
+	private zoomInButton: Button;
+	private zoomOutButton: Button;
 	private dialog: Dialog;
 
 	private lastHoverX: number = 0;
@@ -38,6 +46,10 @@ class Map {
 	public initialise(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void {
 		this._element = canvas;
 		this._context = context;
+		this.zoomInButton = new Button(50, 50, 32, 32, plusImage);
+		this.zoomInButton.hide();
+		this.zoomOutButton = new Button(50, 50, 32, 32, minusImage);
+		this.zoomOutButton.hide();
 		this.dialog = new Dialog(100, 100, 118, 64);
 		this.dialog.hide();
 		context.imageSmoothingEnabled = false;
@@ -70,6 +82,11 @@ class Map {
 		this.triggerUpdate();
 	}
 
+	public enableZoomButtons() {
+		this.zoomInButton.show();
+		this.zoomOutButton.show();
+	}
+
 	get x() {
 		return this._x;
 	}
@@ -93,6 +110,9 @@ class Map {
 
 		this._context.imageSmoothingEnabled = false;
 		((this._context as unknown) as CanvasRendereringContext2D).msImageSmoothingEnabled = false;
+
+		this.zoomInButton.setPosition(this._width - 34, this._height - 34 - 34);
+		this.zoomOutButton.setPosition(this._width - 34, this._height - 34);
 
 		this.triggerUpdate();
 	}
@@ -145,12 +165,12 @@ class Map {
 		this.targetZoom = zoom;
 	}
 
-	public zoomIn(centerX, centerY): void {
-		this.adjustZoom(this.targetZoom * 0.1, centerX, centerY);
+	public zoomIn(centerX, centerY, amount = 0.1): void {
+		this.adjustZoom(this.targetZoom * amount, centerX, centerY);
 	}
 
-	public zoomOut(centerX, centerY): void {
-		this.adjustZoom(this.targetZoom * -0.1, centerX, centerY);
+	public zoomOut(centerX, centerY, amount = 0.1): void {
+		this.adjustZoom(this.targetZoom * -amount, centerX, centerY);
 	}
 
 	public adjustZoom(zoomAdjust, centerX, centerY) {
@@ -276,6 +296,20 @@ class Map {
 	public click(x: number, y: number) {
 		let clicked = false;
 
+		if (!this.zoomInButton.isHidden()) {
+			if (this.zoomInButton.getBounds().containsPoint(x, y)) {
+				this.zoomIn(this._width / 2, this._height / 2, 0.4);
+				return;
+			}
+		}
+
+		if (!this.zoomOutButton.isHidden()) {
+			if (this.zoomOutButton.getBounds().containsPoint(x, y)) {
+				this.zoomOut(this._width / 2, this._height / 2, 0.4);
+				return;
+			}
+		}
+
 		if (!this.dialog.isHidden()) {
 			clicked = this.dialog.click(x, y);
 		}
@@ -399,6 +433,8 @@ class Map {
 			pin.draw(this._context, this._x, this._y, this._zoom);
 		});
 
+		this.zoomInButton.draw(this._context);
+		this.zoomOutButton.draw(this._context);
 		this.dialog.draw(this._context);
 	}
 }

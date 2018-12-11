@@ -40,7 +40,18 @@ const createPage = () => {
 		dragX = event.clientX;
 		dragY = event.clientY;
 	});
+	canvas.addEventListener("touchstart", (event) => {
+		map.enableZoomButtons();
+		drag = true;
+		const touch = event.touches[0];
+		dragX = touch.clientX;
+		dragY = touch.clientY;
+	});
+
 	window.addEventListener("mouseup", (event) => {
+		drag = false;
+	});
+	window.addEventListener("touchend", (event) => {
 		drag = false;
 	});
 
@@ -53,6 +64,17 @@ const createPage = () => {
 		dragX = event.clientX;
 		dragY = event.clientY;
 
+		map.triggerUpdate();
+	});
+	window.addEventListener("touchmove", (event) => {
+		if (!drag) {
+			return;
+		}
+		const touch = event.touches[0];
+		map.moveX(touch.clientX - dragX);
+		map.moveY(touch.clientY - dragY);
+		dragX = touch.clientX;
+		dragY = touch.clientY;
 		map.triggerUpdate();
 	});
 	canvas.addEventListener("mousemove", (event) => {
