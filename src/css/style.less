@@ -57,6 +57,8 @@ html {
 }
 
 body {
+	display: flex;
+	flex-direction: column;
 	background-image: url("../img/menu-background.jpg");
 	background-size: 100% 100%;
 	height: 100%;
@@ -67,6 +69,8 @@ body {
 }
 
 header {
+	flex-shrink: 0;
+	flex-grow: 0;
 	display: flex;
 	align-items: center;
 	padding: 4px 10px;
@@ -102,8 +106,11 @@ header {
 
 #content {
 	display: flex;
-	height: calc(100% - 40px - 20px);
-	margin: 10px;
+	flex-grow: 1;
+	margin: 4px;
+	@media @desktop-small {
+		margin: 10px;
+	}
 
 	@media @max-size {
 		max-width: 1350px;
@@ -112,7 +119,8 @@ header {
 
 #challenges-container {
 	flex-shrink: 0;
-	width: 460px;
+	width: 34%;
+	max-width: 460px;
 	max-height: 100%;
 	color: @white-color;
 	overflow-y: scroll;
@@ -122,9 +130,11 @@ header {
 	flex-grow: 1;
 	flex-shrink: 1;
 	box-sizing: border-box;
-	height: 100%;
 	border: 6px solid rgba(30, 46, 81, 0.7);
-	margin-left: 10px;
+
+	@media @desktop-small {
+		margin-left: 10px;
+	}
 	/* Hiding the overflow allows the container to resize despite the inner canvas being larger.
 		 The canvas can then reset its size to match. */
 	overflow: hidden;
@@ -135,6 +145,7 @@ canvas {
 	image-rendering: -webkit-crisp-edges;
 	image-rendering: pixelated;
 	image-rendering: crisp-edges;
+	touch-action: none;
 }
 
 .challenge-set-major {
@@ -150,7 +161,13 @@ canvas {
 			@major-set-right-gradient-end-color 100%
 		);
 		padding: 10px 20px;
-		font-size: 1.25rem;
+		font-size: 1.05em;
+		@media @tablet {
+			font-size: 1.1rem;
+		}
+		@media @desktop {
+			font-size: 1.25rem;
+		}
 		.text-shadow(2px);
 	}
 
@@ -162,10 +179,23 @@ canvas {
 .challenge-set-minor {
 	margin-top: 4px;
 
-	.block {
+	> .block {
+		display: flex;
 		background-image: linear-gradient(75deg, @minor-set-left-color 25%, @minor-set-right-color 25%);
-		padding: 10px 17px 10px 20px;
+		padding: 6px 8px;
+		@media @tablet {
+			padding: 10px 17px 10px 20px;
+		}
 		border: 3px solid rgba(30, 46, 81, 0.7);
+
+		> .left-block {
+			flex-grow: 1;
+		}
+
+		> .right-block {
+			display: flex;
+			align-items: center;
+		}
 
 		&:after {
 			.clear-fix();
@@ -178,24 +208,14 @@ canvas {
 	}
 
 	h3 {
-		font-size: 1.125rem;
-		.text-shadow(2px);
-	}
-
-	.left-block {
-		float: left;
-		width: 85%;
-
-		.description {
-			display: inline-block;
-			.text-shadow(2px);
+		font-size: 0.95em;
+		@media @tablet {
+			font-size: 1rem;
 		}
-	}
-
-	.right-block {
-		float: right;
-		display: flex;
-		align-items: center;
+		@media @desktop {
+			font-size: 1.125rem;
+		}
+		.text-shadow(2px);
 	}
 
 	.list-container {
@@ -220,7 +240,10 @@ canvas {
 	background-color: @challenge-bg-color;
 	background-size: 200% 100%;
 	background-position: right bottom;
-	padding: 10px 20px;
+	padding: 6px 10px;
+	@media @tablet {
+		padding: 10px 20px;
+	}
 	transition: background-position 300ms ease-out, background-color 300ms;
 
 	&:hover,
@@ -244,6 +267,15 @@ canvas {
 
 		.description {
 			display: inline-block;
+
+			font-size: 0.8em;
+			@media @tablet {
+				font-size: 0.9em;
+			}
+			@media @desktop {
+				font-size: 1em;
+			}
+			.text-shadow(2px);
 		}
 
 		.progress-bar {
