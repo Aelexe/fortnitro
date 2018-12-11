@@ -5,6 +5,9 @@
 @desktop: ~"(min-width: 1200px)";
 @max-size: ~"(min-width: 1350px)";
 
+@landscape: ~"(orientation: landscape)";
+@portrait: ~"(orientation: portrait)";
+
 /* Fonts */
 @primary-font: "Open Sans", sans-serif;
 @secondary-font: "Oswald", sans-serif;
@@ -108,6 +111,10 @@ header {
 	display: flex;
 	flex-grow: 1;
 	margin: 4px;
+
+	@media @portrait {
+		flex-direction: column-reverse;
+	}
 	@media @desktop-small {
 		margin: 10px;
 	}
@@ -119,16 +126,25 @@ header {
 
 #challenges-container {
 	flex-shrink: 0;
-	width: 34%;
-	max-width: 460px;
-	max-height: 100%;
+	@media @landscape {
+		width: 34%;
+		max-width: 460px;
+		max-height: 100%;
+	}
+	@media @portrait {
+		width: 100%;
+		max-height: 40vh;
+		margin-top: 4px;
+	}
 	color: @white-color;
 	overflow-y: scroll;
 }
 
 #canvas-container {
 	flex-grow: 1;
-	flex-shrink: 1;
+	@media @landscape {
+		flex-shrink: 1;
+	}
 	box-sizing: border-box;
 	border: 6px solid rgba(30, 46, 81, 0.7);
 
@@ -149,7 +165,12 @@ canvas {
 }
 
 .challenge-set-major {
-	width: calc(100% - 11px);
+	@media @landscape {
+		width: calc(100% - 11px);
+	}
+	@media @portrait {
+		width: calc(100% - 9px);
+	}
 
 	h2 {
 		/* background-image: linear-gradient(195deg, @major-set-right-gradient-end-color 0%, @major-set-right-gradient-start-color 45%, @major-set-left-gradient-end-color 45%, @major-set-left-gradient-start-color 100%); */
@@ -352,7 +373,12 @@ canvas {
 
 .simplebar-scrollbar {
 	position: absolute;
-	right: 2px;
+	@media @landscape {
+		right: 2px;
+	}
+	@media @portrait {
+		right: 0px;
+	}
 	width: 7px;
 	min-height: 10px;
 }
