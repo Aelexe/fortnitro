@@ -63,6 +63,7 @@ export class Tracker {
 							if (pData.links !== undefined) {
 								pData.links.forEach((linkPData) => {
 									const linkedPin: Pin = new Pin(linkPData.id, linkPData.x, linkPData.y, linkPData.image);
+									linkedPin.setParent(challenge);
 
 									pin.addLinkedPin(linkedPin);
 									map.addPin(linkedPin);

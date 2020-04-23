@@ -7,7 +7,7 @@ import { Hoverable } from "./hoverable";
 const pinMap = {
 	streetLight: "speakerpin",
 	star: "starpin",
-	glider: "umbrellapin",
+	glider: "glider",
 	target: "targetpin",
 	kill: "skullpin",
 	timeTrial: "timerpin",
@@ -16,6 +16,13 @@ const pinMap = {
 	hoop: "hooppin",
 	speed: "speedpin",
 	dance: "dance",
+	redMarker: "markerred",
+	sheetMusic: "sheetMusic",
+	piano: "piano",
+	banner: "banner",
+	candycane: "candycane",
+	firework: "firework",
+	noms: "noms",
 	question: "questionpin"
 };
 

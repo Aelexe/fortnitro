@@ -3,6 +3,8 @@ RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
 RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+RewriteCond %{REQUEST_URI} ^/discord$ [NC]
+RewriteRule ^(.*)$ https://discord.gg/pkr8YJy [R=301,L]
 
 Header set Cache-Control "public, must-revalidate"
 Header unset ETag

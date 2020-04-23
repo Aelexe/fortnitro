@@ -1,4 +1,5 @@
 import { map } from "./map";
+import { Position } from "./map/position";
 import { Tracker } from "./tracker";
 import challengeData from "./data/challenge-data";
 
@@ -23,7 +24,8 @@ const createPage = () => {
 		map.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
 	};
 
-	updateMapSize();
+	// A timeout is used here to allow the styling to take place before the map is sized.
+	setTimeout(updateMapSize, 1);
 
 	window.onresize = () => {
 		updateMapSize();
@@ -32,51 +34,75 @@ const createPage = () => {
 	const tracker = new Tracker(challengeData, challengesContainer);
 
 	let drag = false;
-	let dragX: number;
-	let dragY: number;
+	let pinch = false;
+	const prevTouch: Position = new Position(0, 0);
+	const prevTouch2: Position = new Position(0, 0);
+	let previousDistance = 0;
 
 	canvas.addEventListener("mousedown", (event) => {
 		drag = true;
-		dragX = event.clientX;
-		dragY = event.clientY;
+		prevTouch.setPosition(event.clientX, event.clientY);
 	});
-	canvas.addEventListener("touchstart", (event) => {
-		map.enableZoomButtons();
-		drag = true;
+
+	const touchStart = (event) => {
 		const touch = event.touches[0];
-		dragX = touch.clientX;
-		dragY = touch.clientY;
-	});
+		prevTouch.setPosition(touch.pageX - canvas.offsetLeft, touch.pageY - canvas.offsetTop);
+		if (event.touches.length === 1) {
+			drag = true;
+		} else {
+			drag = false;
+			pinch = true;
+			const touch2 = event.touches[1];
+			prevTouch2.setPosition(touch2.pageX - canvas.offsetLeft, touch2.pageY - canvas.offsetTop);
+			previousDistance = prevTouch.getDistance(prevTouch2);
+		}
+	};
+	canvas.addEventListener("touchstart", touchStart);
 
 	window.addEventListener("mouseup", (event) => {
 		drag = false;
 	});
-	window.addEventListener("touchend", (event) => {
+	const touchEnd = (event) => {
 		drag = false;
-	});
+		pinch = false;
+	};
+	window.addEventListener("touchend", touchEnd);
 
 	window.addEventListener("mousemove", (event) => {
 		if (!drag) {
 			return;
 		}
-		map.moveX(event.clientX - dragX);
-		map.moveY(event.clientY - dragY);
-		dragX = event.clientX;
-		dragY = event.clientY;
+		map.moveX(event.clientX - prevTouch.getX());
+		map.moveY(event.clientY - prevTouch.getY());
+		prevTouch.setPosition(event.clientX, event.clientY);
 
 		map.triggerUpdate();
 	});
-	window.addEventListener("touchmove", (event) => {
-		if (!drag) {
-			return;
-		}
+
+	const touchMove = (event) => {
 		const touch = event.touches[0];
-		map.moveX(touch.clientX - dragX);
-		map.moveY(touch.clientY - dragY);
-		dragX = touch.clientX;
-		dragY = touch.clientY;
-		map.triggerUpdate();
-	});
+		if (drag) {
+			map.moveX(touch.pageX - canvas.offsetLeft - prevTouch.getX());
+			map.moveY(touch.pageY - canvas.offsetTop - prevTouch.getY());
+			prevTouch.setPosition(touch.pageX - canvas.offsetLeft, touch.pageY - canvas.offsetTop);
+			map.triggerUpdate();
+		} else if (pinch) {
+			const touch2 = event.touches[1];
+			const oldCenter = prevTouch.getCenterPosition(prevTouch2);
+			prevTouch.setPosition(touch.pageX - canvas.offsetLeft, touch.pageY - canvas.offsetTop);
+			prevTouch2.setPosition(touch2.pageX - canvas.offsetLeft, touch2.pageY - canvas.offsetTop);
+			const newCenter = prevTouch.getCenterPosition(prevTouch2);
+			const newDistance = prevTouch.getDistance(prevTouch2);
+			const change = newDistance / previousDistance;
+			map.adjustZoom(map.zoom * change - map.zoom, oldCenter.getX(), oldCenter.getY());
+			map.moveX(newCenter.getX() - oldCenter.getX());
+			map.moveY(newCenter.getY() - oldCenter.getY());
+			// map.zoom = map.zoom * change;
+			previousDistance = newDistance;
+			map.triggerUpdate();
+		}
+	};
+	canvas.addEventListener("touchmove", touchMove);
 	canvas.addEventListener("mousemove", (event) => {
 		map.hover(event.offsetX, event.offsetY);
 	});
